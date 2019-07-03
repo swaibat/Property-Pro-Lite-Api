@@ -1,15 +1,17 @@
 /* eslint-disable linebreak-style */
 import express from 'express';
 import userRoutes from './api/routes/users';
-// eslint-disable-next-line import/no-unresolved
 import propertyRoutes from './api/routes/property';
+import swaggerUI from 'swagger-ui-express';
+import swaggerDoc from './swagger.json';
 
 const app = express();
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 1000;
 app.use(express.json());
 
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/property', propertyRoutes);
+app.use('/documentation', swaggerUI.serve, swaggerUI.setup(swaggerDoc));
 
 // if the page is not found
 app.use((req, res, next) => {
