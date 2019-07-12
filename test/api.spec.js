@@ -3,7 +3,7 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import { testdata, testAds } from '../api/data/data';
 // import { testdata, testAds } from '../api/models/users';
-import userRoutes from '../api/routes/users';
+import userRoutes from '../api/routes/auth';
 import propertyRoutes from '../api/routes/property';
 
 const app = express();
@@ -73,7 +73,7 @@ describe('/POST/signin routes', () => {
         res.should.have.status(200);
         res.body.should.be.a('object');
         res.body.user.should.be.a('object');
-        res.body.user.should.have.property('isAdmin');
+        res.body.user.should.have.property('isAgent');
         res.body.user.should.have.property('phoneNumber');
         res.body.user.should.have.property('email');
         res.body.should.have.property('status').eql(200);

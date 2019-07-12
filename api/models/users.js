@@ -1,5 +1,6 @@
 import { users,propertys } from '../data/data';
-export class User {
+
+class User {
   constructor(id, firstName, lastName, email, address, phoneNumber, password) {
     this.id = id;
     this.firstName = firstName;
@@ -7,30 +8,37 @@ export class User {
     this.email = email;
     this.address = address;
     this.phoneNumber = phoneNumber;
-    this.isAdmin = false;
+    this.isAgent = false;
     this.password = password;
   }
 
   static getUserByEmail(email){
     return users.find(u => u.email === email)
   }
+  static getUserByID(id){
+    return users.find(u => u.id === id)
+  }
   static allProperty(){
     return propertys
   }
 }
 
-export class Admin extends User {
+class Agent extends User {
   constructor(id, firstName, lastName, email, address, phoneNumber, password){
       super(id, firstName, lastName, email, address, phoneNumber, password)
-      this.isAdmin = true
+      this.isAgent = true
   }
   static createProperty(property){
     propertys.push(property);
   }
 
-  static updateProperty(property,address,city){
-    property.address = address;
+  static updateProperty(property,price, address, city, state, type, imageUrl){
+    property.price = price;
     property.city = city;
+    property.address = address;
+    property.type = type;
+    property.state = state;
+    property.imageUrl = imageUrl;
     return property;
   }
 
@@ -43,5 +51,6 @@ export class Admin extends User {
     const findIndex = propertys.indexOf(property);
     propertys.splice(findIndex, 1);
   }
-  
 }
+
+export {Agent,User}

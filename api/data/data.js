@@ -92,28 +92,28 @@ export const users = [
   ];
   
   export const propertys = [
-    {
-      id: 1,
-      owner: 1,
-      price: 200,
-      city: 'gulu',
-      state: 'nothern',
-      address: 'kampala',
-      type: '3bedrooms',
-      imageUrl: 'images/hose1.jpg',
-      status: 'available',
-    },
-    {
-      id: 2,
-      owner: 3,
-      price: 200,
-      city: 'anyang',
-      state: 'eastern',
-      address: 'kigali',
-      type: 'miniflat',
-      imageUrl: 'images/miniflat.png',
-      status: 'sold',
-    },
+    // {
+    //   id: 1,
+    //   owner: 1,
+    //   price: 200,
+    //   city: 'gulu',
+    //   state: 'nothern',
+    //   address: 'kampala',
+    //   type: '3bedrooms',
+    //   imageUrl: 'images/hose1.jpg',
+    //   status: 'available',
+    // },
+    // {
+    //   id: 2,
+    //   owner: 3,
+    //   price: 200,
+    //   city: 'anyang',
+    //   state: 'eastern',
+    //   address: 'kigali',
+    //   type: 'miniflat',
+    //   imageUrl: 'images/miniflat.png',
+    //   status: 'sold',
+    // },
   ];
   
   export const testAds = [
