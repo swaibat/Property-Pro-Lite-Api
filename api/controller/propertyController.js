@@ -1,40 +1,40 @@
-import { Property } from '../models/property';
+import Property from '../models/property';
 import { propertys } from '../data/data';
-import { users } from '../data/data';
-import { Admin,User } from '../models/users';
+import { Agent,User } from '../models/users';
 
-export class PropertyController {
+class PropertyController {
   postProperty(req, res) {
       const id = propertys.length + 1;
-      const owner = users.find(user => user.email === res.locals.email)
-      const property = new Property(id, parseInt(owner.id), req.body.price, req.body.address, req.body.city, req.body.state, req.body.type, req.body.imageUrl); 
-      Admin.createProperty(property);
+      const { price, address, city, state, type, imageUrl } = req.body;
+      const { password,isAdmin,token, ...noA } = res.locals.user;
+      const property = new Property(id, noA, price, address, city, state, type, imageUrl); 
+      Agent.createProperty(property);
       return res.status(201).send({ status:201, property });
     };
 
   updateProperty(req, res) {
-    // eslint-disable-next-line no-shadow
     const { property } = res.locals;
-    const {address,city} = req.body
-    const advert = Admin.updateProperty(property,address,city);
+    const {price, address, city, state, type, imageUrl} = req.body
+    const advert = Agent.updateProperty(property,price, address, city, state, type, imageUrl);
     res.status(200).send({status:200,property:advert});
   }
 
   markSold(req, res) {
       const { property } = res.locals;
-      const advert =  Admin.markPropertySold(property);
+      const advert =  Agent.markPropertySold(property);
       res.status(200).send({status:200,property:advert});
   }
 
   deleteProperty(req, res) {
     const { property } = res.locals
-    Admin.deleteProperty(property);
+    Agent.deleteProperty(property);
     return res.status(200).send({ status:200, message: 'property deleted successfully' });
   }
 
   // eslint-disable-next-line consistent-return
   getAllProperty(req, res) {
     const property = User.allProperty();
+    if(property.length < 1) return res.status(404).send({ status: 404, error:'Ooops no property  found' });
     res.status(200).send({ status: 200, property });
   }
 
@@ -43,3 +43,5 @@ export class PropertyController {
     res.status(200).send({ status: 200, property });
   }
 }
+
+export default PropertyController;

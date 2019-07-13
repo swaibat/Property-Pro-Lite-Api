@@ -1,0 +1,390 @@
+{
+  "swagger": "2.0",
+  "info": {
+      "version": "1.0",
+      "title": "Property-Pro-Lite",
+      "description": "Property Pro Lite is a platform where people can create and/or search properties for sale or rent.",
+      "termsOfService": "http://swagger.io/terms/",
+      "contact": {
+          "email": "rumbiihas@gmail.com"
+      },
+      "license": {
+          "name": "Apache 2.0",
+          "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+      }
+  },
+  "server": [
+      {
+          "url": "/"
+      }
+  ],
+  "basePath": "/api/v1/",
+  "schemes": [
+      "http"
+  ],
+  "tags": [
+      {
+          "name": "Auth",
+          "description": "Authentication and Creating user account"
+      },
+      {
+        "name": "Agent",
+        "description": "All Operations/methods to be used by agent"
+    },
+      {
+          "name": "User",
+          "description": "All Operations/methods to be used by User"
+      }
+  ],
+  "paths": {
+      "/users/auth/signup/": {
+          "post": {
+              "description": "Create new user and add to datatables",
+              "summary": "User sign up.",
+              "tags": [
+                  "Auth"
+              ],
+              "operationId": "V1AuthSignupPost",
+              "deprecated": false,
+              "produces": [
+                  "application/json"
+              ],
+              "parameters": [
+                  {
+                      "name": "firstName",
+                      "in": "formData",
+                      "required": true,
+                      "type": "string",
+                      "description": ""
+                  },
+                  {
+                      "name": "lastName",
+                      "in": "formData",
+                      "required": true,
+                      "type": "string",
+                      "description": ""
+                  },
+                  {
+                      "name": "email",
+                      "in": "formData",
+                      "required": true,
+                      "type": "string",
+                      "description": ""
+                  },
+                  {
+                      "name": "password",
+                      "in": "formData",
+                      "required": true,
+                      "type": "string",
+                      "description": ""
+                  },
+                  {
+                    "name": "phoneNumber",
+                    "in": "formData",
+                    "required": true,
+                    "type": "string",
+                    "description": ""
+                },
+                  {
+                      "name": "address",
+                      "in": "formData",
+                      "required": true,
+                      "type": "string",
+                      "description": ""
+                  },
+                  {
+                    "name": "isAgent",
+                    "in": "formData",
+                    "type": "boolean",
+                    "default": false,
+                    "description": ""
+                }
+              ],
+              "responses": {
+                  "201": {
+                      "description": "Created",
+                      "headers": {}
+                  },
+                  "409": {
+                      "description": "Email already taken",
+                      "headers": {}
+                  },
+                  "500": {
+                      "description": "Internal Server Error",
+                      "headers": {}
+                  }
+              }
+          }
+      },
+      "/users/auth/signin/": {
+          "post": {
+              "description": "Authenticates user using email and password",
+              "summary": "User sign in.",
+              "tags": [
+                  "Auth"
+              ],
+              "operationId": "V1AuthSigninPost",
+              "deprecated": false,
+              "produces": [
+                  "application/json"
+              ],
+              "parameters": [
+                  {
+                      "name": "email",
+                      "in": "formData",
+                      "required": true,
+                      "type": "string",
+                      "description": ""
+                  },
+                  {
+                      "name": "password",
+                      "in": "formData",
+                      "required": true,
+                      "type": "string",
+                      "description": ""
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "OK",
+                      "headers": {}
+                  },
+                  "400": {
+                      "description": "Invalid username/password supplied",
+                      "headers": {}
+                  },
+                  "404": {
+                      "description": "User not found",
+                      "headers": {}
+                  },
+                  "405": {
+                      "description": "Validation exception",
+                      "headers": {}
+                  },
+                  "500": {
+                      "description": "Internal Server Error",
+                      "headers": {}
+                  }
+              }
+          }
+      },
+      "/property": {
+          "post": {
+              "500": {
+                  "description": "Internal Server Error",
+                  "headers": {}
+              },
+              "description": "Agent should create a new property",
+              "summary": "Agent should create a new property",
+              "tags": [
+                  "Agent"
+              ],
+              "operationId": "propertyPost",
+              "produces": [
+                  "application/json"
+              ],
+              "parameters": [
+                  {
+                      "name": "amount",
+                      "in": "formData",
+                      "required": false,
+                      "type": "number",
+                      "description": ""
+                  },
+                  {
+                      "name": "tenor",
+                      "in": "formData",
+                      "required": false,
+                      "type": "number",
+                      "description": ""
+                  }
+              ],
+              "responses": {
+                  "201": {
+                      "description": "Created",
+                      "headers": {}
+                  }
+              },
+              "security": [
+                  {
+                      "Bearer": []
+                  }
+              ]
+          },
+          "get": {
+              "404": {
+                  "description": "No property found",
+                  "headers": {}
+              },
+              "500": {
+                  "description": "Internal Server Error",
+                  "headers": {}
+              },
+              "description": "users to view all property",
+              "summary": "View all property that are not sold",
+              "tags": [
+                  "User"
+              ],
+              "operationId": "propertyGet",
+              "deprecated": false,
+              "produces": [
+                  "application/json"
+              ],
+              "parameters": [
+                  {
+                      "name": "status",
+                      "in": "query",
+                      "required": false,
+                      "type": "string",
+                      "description": ""
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "successful operation",
+                      "headers": {}
+                  }
+              },
+              "security": [
+                  {
+                      "Bearer": []
+                  }
+              ]
+          }
+      },
+      "/property/{propertyId}": {
+          "get": {
+              "description": "Returns a property identified by an id the system to the user",
+              "summary": "Agent can view a specific property",
+              "tags": [
+                  "User"
+              ],
+              "operationId": "V1property1Get",
+              "deprecated": false,
+              "produces": [
+                  "application/json"
+              ],
+              "parameters": [
+                  {
+                      "name": "propertyId",
+                      "in": "path",
+                      "description": "",
+                      "type": "integer",
+                      "required": false
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "",
+                      "headers": {}
+                  },
+                  "401": {
+                      "description": "Unauthorized Access",
+                      "headers": {}
+                  },
+                  "404": {
+                      "description": "property Not found",
+                      "headers": {}
+                  }
+              },
+              "security": [
+                  {
+                      "Bearer": []
+                  }
+              ]
+          },
+          "delete": {
+            "description": "Agent to update property by status of either approved or rejected",
+            "summary": "Update property status",
+            "tags": [
+                "Agent"
+            ],
+            "operationId": "V1property1Patch",
+            "deprecated": false,
+            "produces": [
+                "application/json"
+            ],
+            "parameters": [
+                {
+                    "name": "propertyId",
+                    "in": "path",
+                    "description": "",
+                    "type": "integer",
+                    "required": false
+                },
+                {
+                    "name": "status",
+                    "in": "formData",
+                    "required": true,
+                    "type": "string",
+                    "description": ""
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "",
+                    "headers": {}
+                },
+                "400": {
+                    "description": "Bad Request",
+                    "headers": {}
+                },
+                "401": {
+                    "description": "Unauthorized Access",
+                    "headers": {}
+                },
+                "500": {
+                    "description": "Internal Server Error",
+                    "headers": {}
+                }
+            },
+            "security": [
+                {
+                    "Bearer": []
+                }
+            ]
+        }
+      },
+      "/property/{propertyId}/sold": {
+        "patch": {
+            "description": "Admin is able to update a user and mark him as verified by accesssing the route",
+            "summary": "admin update user status",
+            "tags": [
+                "Agent"
+            ],
+            "operationId": "V1VerifyPatch",
+            "deprecated": false,
+            "produces": [
+                "application/json"
+            ],
+            "parameters": [
+                {
+                    "name": "propertyId",
+                    "in": "path",
+                    "required": true,
+                    "type": "string",
+                    "description": ""
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "",
+                    "headers": {}
+                }
+            },
+            "security": [
+                {
+                    "Bearer": []
+                }
+            ]
+        }
+    }
+  },
+  "securityDefinitions": {
+      "Bearer": {
+          "type": "apiKey",
+          "name": "Authorization",
+          "in": "header"
+      }
+  }
+}
