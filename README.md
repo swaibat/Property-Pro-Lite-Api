@@ -112,11 +112,11 @@ You can see a hosted version of the template at [https://swaibat.github.io/Prope
 ## API URL
 
 The API is currently in version 1 (v1) and is hosted at
-[https://Property-Pro-Lite-Api.herokuapp.com/](https://Property-Pro-Lite-Api.herokuapp.com/)
+[https://prop-pro.herokuapp.com/](https://prop-pro.herokuapp.com/)
 
 ## API Documentation
 
-[https://Property-Pro-Lite-Api.herokuapp.com/documentation](https://Property-Pro-Lite-Api.herokuapp.com/documentation)
+[https://prop-pro.herokuapp.com/documentation](https://prop-pro.herokuapp.com/documentation)
 
 
 
