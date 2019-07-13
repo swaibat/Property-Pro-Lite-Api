@@ -1,22 +1,19 @@
 import { users,propertys } from '../data/data';
 
 class User {
-  constructor(id, firstName, lastName, email, address, phoneNumber, password) {
+  constructor(id, firstName, lastName, email, address, phoneNumber, password,isAgent ) {
     this.id = id;
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
     this.address = address;
     this.phoneNumber = phoneNumber;
-    this.isAgent = false;
+    this.isAgent = isAgent;
     this.password = password;
   }
 
   static getUserByEmail(email){
     return users.find(u => u.email === email)
-  }
-  static getUserByID(id){
-    return users.find(u => u.id === id)
   }
   static allProperty(){
     return propertys
@@ -24,10 +21,7 @@ class User {
 }
 
 class Agent extends User {
-  constructor(id, firstName, lastName, email, address, phoneNumber, password){
-      super(id, firstName, lastName, email, address, phoneNumber, password)
-      this.isAgent = true
-  }
+  
   static createProperty(property){
     propertys.push(property);
   }

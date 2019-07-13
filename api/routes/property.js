@@ -13,7 +13,7 @@ const property = new PropertyController();
 router.post('/', Ads.adsValidator, Auth.agentCheck, Ads.checkIfAdExist, property.postProperty);
 
 // update his own property
-router.patch('/:Id',Ads.getPropertyById, Ads.AgentAndOwner, property.updateProperty);
+router.patch('/:Id',Ads.adsValidator, Ads.getPropertyById, Ads.AgentAndOwner, property.updateProperty);
 
 // mark property as sold (his own)
 router.patch('/:Id/sold',Auth.agentCheck, Ads.getPropertyById, Ads.AgentAndOwner, property.markSold);

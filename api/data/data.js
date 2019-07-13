@@ -9,7 +9,7 @@ export const users = [
       address: 'kampala',
       phoneNumber: '+256758307272',
       password: '$2b$10$ksxz1QB/3qKkQNAvgL4TbusIATCFQBq1qNRIdHDpd9xgvFwLt76nq',
-      isAdmin: true,
+      isAgent: true,
     },
     {
       id: 2,
@@ -19,7 +19,7 @@ export const users = [
       address: 'kampala',
       phoneNumber: '+256758307272',
       password: '$2b$10$ksxz1QB/3qKkQNAvgL4TbusIATCFQBq1qNRIdHDpd9xgvFwLt76nq',
-      isAdmin: true,
+      isAgent: true,
     },
   ];
   
@@ -31,7 +31,7 @@ export const users = [
       address: 'kampala',
       phoneNumber: '07753225633',
       password: 'vella',
-      isAdmin: false,
+      isAgent: false,
     },
     { lastName: 'menk' },
     { firstName: 1 },
@@ -40,8 +40,8 @@ export const users = [
       password: 'vella',
     },
     {
-      email: 'amaar@gmail.com',
-      password: 'amaar',
+      email: 'vella@gmail.com',
+      password: 'amaarn',
     },
     {
       firstName: 'agenttest',
@@ -50,7 +50,7 @@ export const users = [
       address: 'kampala',
       phoneNumber: '07753225633',
       password: 'agenttest',
-      isAdmin: true,
+      isAgent: true,
     },
     {
       firstName: 'agent test',
@@ -59,7 +59,7 @@ export const users = [
       address: 'kampala',
       phoneNumber: '07753225633',
       password: 'agenttest',
-      isAdmin: true,
+      isAgent: true,
     },
     {
       firstName: 'agen',
@@ -68,7 +68,7 @@ export const users = [
       address: 'kampala',
       phoneNumber: '07753225633',
       password: 'agenttest',
-      isAdmin: true,
+      isAgent: true,
     },
     {
       firstName: 'agen',
@@ -77,7 +77,7 @@ export const users = [
       address: 'kampala',
       phoneNumber: '0775322',
       password: 'agenttest',
-      isAdmin: true,
+      isAgent: true,
     },
     {
       firstName: 'agen',
@@ -86,34 +86,63 @@ export const users = [
       address: 'kampala',
       phoneNumber: '0775322666',
       password: 'agenttest',
-      isAdmin: 'true',
+      isAgent: 'true',
     },
+    {
+      email: 'vellaab@gmail.com',
+      password: 'amaarn',
+    },
+    {
+      firstName: 've lla',
+      lastName: 'vella',
+      email: 'vella@gmail.com',
+      address: 'kampala',
+      phoneNumber: '07753225633',
+      password: 'vella',
+      isAgent: false,
+    }
   
   ];
   
   export const propertys = [
-    // {
-    //   id: 1,
-    //   owner: 1,
-    //   price: 200,
-    //   city: 'gulu',
-    //   state: 'nothern',
-    //   address: 'kampala',
-    //   type: '3bedrooms',
-    //   imageUrl: 'images/hose1.jpg',
-    //   status: 'available',
-    // },
-    // {
-    //   id: 2,
-    //   owner: 3,
-    //   price: 200,
-    //   city: 'anyang',
-    //   state: 'eastern',
-    //   address: 'kigali',
-    //   type: 'miniflat',
-    //   imageUrl: 'images/miniflat.png',
-    //   status: 'sold',
-    // },
+    {
+      id: 1,
+      owner: {
+        id: 1,
+        firstName: "admin",
+        lastName: "admin",
+        email: "admin@gmail.com",
+        address: "kampala",
+        phoneNumber: "+256758307272",
+        isAgent: true
+    },
+      price: 200,
+      city: 'gulu',
+      state: 'nothern',
+      address: 'kampala',
+      type: '3bedrooms',
+      imageUrl: 'images/hose1.jpg',
+      status: 'available',
+    },
+    {
+      id: 2,
+      owner: {
+        id: 2,
+        firstName: 'agent',
+        lastName: 'admin',
+        email: 'agent@gmail.com',
+        address: 'kampala',
+        phoneNumber: '+256758307272',
+        isAgent: true,
+      },
+      price: 200,
+      city: 'anyang',
+      state: 'eastern',
+      address: 'kigali',
+      type: 'miniflat',
+      imageUrl: 'images/miniflat.png',
+      status: 'sold',
+    },
   ];
   
   export const testAds = [
@@ -135,8 +164,12 @@ export const users = [
       status: 'sold',
     },
     {
-      address: 'nansana',
+      price: 200,
       city: 'kampala',
+      state: 'central',
+      address: 'kampala',
+      type: '3bedrooms',
+      imageUrl: 'images/hose1.jpg'
     },
     {
       price: '200',
@@ -170,6 +203,22 @@ export const users = [
       type: '3bedrooms',
       imageUrl: 'images/hose1.mp4',
       status: 'available',
+    },
+    {
+      price: 300,
+      city: 'kampala',
+      state: 'central',
+      address: 'kampala',
+      type: 'bedrooms',
+      imageUrl: 'images/hose1.jpg'
+    },
+    {
+      price: '300',
+      city: 'kampala',
+      state: 'central',
+      address: 'kampala',
+      type: 'bedrooms',
+      imageUrl: 'images/hose1.jpg'
     },
   ];
   // const adOne = new Property(1,1,200,'gulu','nothern','3bedrooms','images/hose1.jpg','available');

@@ -21,7 +21,7 @@ class authMiddleware{
       isAgent: Joi.required(),
     });
     const data = Joi.validate(req.body, authSchema);
-    if (typeof req.body.isAgent !== 'boolean') return res.status(400).send({ status: 400, error: ' isAgent should be a boolean' });
+    if (typeof req.body.isAgent !== 'boolean') return res.status(400).send({ status: 400, error: 'isAgent should be a boolean' });
     if (data.error) {
       const resFomart = data.error.details[0].message.replace('"', '').split('"');
       const gotElem = resFomart[0];
@@ -45,8 +45,8 @@ class authMiddleware{
   static ensureUserToken(req, res, next) {
     jwt.verify(res.locals.token, process.env.appSecreteKey, (err, data) => {
       if (err){
-        if (err.message === 'jwt expired') return res.status(403).send({status:403,error:'Your token has expired'})
-        return res.status(403).send({ status: 403, error: err.message });
+        let newMsg = err.message.replace("jwt", "Token");
+        if (newMsg) return res.status(403).send({ status: 403, error: newMsg });
       } 
       const user = User.getUserByEmail(data.email);
       res.locals.user = user;
@@ -57,7 +57,7 @@ class authMiddleware{
   // function creates user token
   static createUserToken(req, res, next) {
     const { email } = req.body;
-    res.locals.token = jwt.sign({ email }, process.env.appSecreteKey, { expiresIn: '1hr' });
+    res.locals.token = jwt.sign({ email }, process.env.appSecreteKey, { expiresIn: '24hr' });
     next();
   }
   

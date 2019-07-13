@@ -8,20 +8,12 @@ dotenv.config();
 
 class UserController {
   signUp(req, res) {
-    const {firstName, lastName, email, address, phoneNumber} = req.body;
+    const {firstName, lastName, email, address, phoneNumber,isAgent} = req.body;
     const hashPassword = bcrypt.hashSync(req.body.password, 10);
     const id = users.length + 1;
-    const user = new User(id, firstName, lastName, email, address, phoneNumber, hashPassword);
-    const agent = new Agent(id, firstName, lastName, email, address, phoneNumber, hashPassword);
+    const user = new User(id, firstName, lastName, email, address, phoneNumber, hashPassword,isAgent);
     const { token } = res.locals;
     user.token = token;
-    agent.token = token;
-
-    if (req.body.isAgent){
-      users.push(agent);
-      const {password, ...noA } = user;
-      return res.status(201).send({ status: 201, agent:noA });
-    }
     users.push(user);
     const {password, ...noA } = user;
     return res.status(201).send({ status: 201, user:noA });
