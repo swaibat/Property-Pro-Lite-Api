@@ -29,10 +29,6 @@ Within Property-Pro-Lite-Api folder you WIll find the following directories and 
 ## Getting Started
 By running the following command Property-Pro-Lite-Api will be automatically downloaded to your local machine so lets get started.
 
-```
-git clone https://github.com/swaibat/quick-credit-ui.git
-```
-
 ### Prerequisites
 
 before you install the software make sure you have the following already installed on your machine
