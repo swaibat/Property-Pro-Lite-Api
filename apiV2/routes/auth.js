@@ -9,9 +9,9 @@ const router = express.Router();
 const user = new UserController();
 
 // signup route
-router.post('/auth/signup', Auth.inputValidator, Auth.createUserToken, user.signUp);
+router.post('/auth/signup', Auth.inputValidator,Auth.checkUserExists, Auth.createUserToken, user.signUp);
 
 // signin route
-router.post('/auth/signin',Auth.createUserToken, user.signIn);
+router.post('/auth/signin',Auth.createUserToken,Auth.checkNoUser, user.signIn);
 
 export default router;

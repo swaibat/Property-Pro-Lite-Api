@@ -27,7 +27,7 @@ export const users = [
     {
       firstName: 'vella',
       lastName: 'vella',
-      email: 'vella@gmail.com',
+      email: `vella1@gmail.com`,
       address: 'kampala',
       phoneNumber: '07753225633',
       password: 'vella',
@@ -36,7 +36,7 @@ export const users = [
     { lastName: 'menk' },
     { firstName: 1 },
     {
-      email: 'vella@gmail.com',
+      email: 'vella1@gmail.com',
       password: 'vella',
     },
     {
@@ -46,7 +46,7 @@ export const users = [
     {
       firstName: 'agenttest',
       lastName: 'agent',
-      email: 'agenttest@gmail.com',
+      email: 'agenttest11@gmail.com',
       address: 'kampala',
       phoneNumber: '07753225633',
       password: 'agenttest',
