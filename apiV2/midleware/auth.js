@@ -1,5 +1,6 @@
 /* eslint-disable linebreak-style */
 /* eslint-disable import/prefer-default-export */
+import bcrypt from 'bcrypt';
 import Joi from '@hapi/joi';
 import jwt from 'jsonwebtoken';
 import { User } from '../models/users';
@@ -43,13 +44,10 @@ class authMiddleware{
   
   // check if real users trying access
   static ensureUserToken(req, res, next) {
-    jwt.verify(res.locals.token, process.env.appSecreteKey, (err, data) => {
-      if (err){
-        let newMsg = err.message.replace("jwt", "Token");
-        if (newMsg) return res.status(403).send({ status: 403, error: newMsg });
-      } 
-      const user = User.getUserByEmail(data.email);
-      res.locals.user = user;
+    jwt.verify(res.locals.token, process.env.appSecreteKey, async (err, user) => {
+      if (err) return res.status(403).json({ error: 403, message: err.message });
+      const dbUser = await User.getUserByEmail(user.email);
+      res.locals.user = dbUser.rows[0];
       next();
     });
   }
@@ -63,14 +61,20 @@ class authMiddleware{
   
   // check if user already exists
   // eslint-disable-next-line consistent-return
-  static checkUserExists(req, res, next) {
-    const user = User.getUserByEmail(req.body.email);
-    user.then(e => {
-      if (e.rows[0]) return res.status(409).send({error:409, message: 'user already exists'});
-      next();
-    });
+  static async checkUserExists(req, res, next) {
+    const user = await User.getUserByEmail(req.body.email);
+    if (user.rows[0]) return res.status(409).send({ status: 409, error: 'user already exists' });
     next();
-  }  
+  }
+
+  static async checkNoUser(req, res, next){
+      const { email, password } = req.body;
+      const user = await User.getUserByEmail(email);
+      if (!user.rows[0]) return res.status(404).send({ status: 404, error: 'user doesnt exist please signup' });
+      const passCompare = bcrypt.compareSync(password, user.rows[0].password);
+      if (!passCompare) return res.status(400).send({ status: 400, message: 'wrong username or password' });
+      next()
+  }
   
   // check if the user is an agent
   static agentCheck(req, res, next) {
