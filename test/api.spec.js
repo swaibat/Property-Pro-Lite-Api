@@ -25,10 +25,7 @@ describe('/POST/signup routes', () => {
       .end((err, res) => {
         res.should.have.status(201);
         res.body.should.be.a('object');
-        res.body.user.should.be.a('object');
-        res.body.user.should.have.property('firstName');
-        res.body.user.should.have.property('lastName');
-        res.body.user.should.have.property('address');
+        res.body.user.should.have.property('token');
         res.body.should.have.property('status').eql(201);
         userToken = res.body.user.token;
         done();
@@ -41,10 +38,6 @@ describe('/POST/signup routes', () => {
       .end((err, res) => {
         res.should.have.status(201);
         res.body.should.be.a('object');
-        res.body.user.should.be.a('object');
-        res.body.user.should.have.property('firstName');
-        res.body.user.should.have.property('lastName');
-        res.body.user.should.have.property('address');
         res.body.should.have.property('status').eql(201);
         agentToken = res.body.user.token;
         done();
