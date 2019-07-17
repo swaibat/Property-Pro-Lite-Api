@@ -1,6 +1,6 @@
 import Joi from '@hapi/joi';
-import { propertys } from '../data/data';
 import Property from '../models/property';
+import { User } from '../models/users';
 import Resp from '../helpers/response';
 import Err from '../helpers/errors';
 
@@ -35,7 +35,6 @@ class adsMiddleware {
   // find if atall that agent owners the advert he wants to do operations on
   static AgentAndOwner(req, res, next) {
     const owner = Property.getPropertyByOwner(res.locals.user.id);
-    console.log(res.locals.user.id)
     owner.then(e => {
       if (!e.rows[0]) return res.status(403).send({ error: 403, message: 'Your do not own this property' });
       next();
@@ -50,15 +49,13 @@ class adsMiddleware {
   }
 
   static queryType(req, res, next) {
-    const property = propertys.filter(ad => ad.type === req.query.type);
-    if (typeof req.query.type !== 'undefined') {
-      const matchType = req.query.type.match(/^(1bedrooms|3bedrooms|5bedrooms|miniFlat|others)$/);
-      if (!matchType) return Resp(403, 'We only have these types 1bedrooms, 3bedrooms, 5bedrooms, miniFlat ,others', res);
-      if (property.length < 1) return Resp(404, 'Ooops property type not found', res);
-      return res.status(200).send({ status: 200, property });
-    }
-    next();
+    const property =  User.queryTypeOfProperty(req.query.type);
+    property.then(e => {
+      if (typeof req.query.type !== 'undefined') return res.status(200).send({ status: 200, property: e.rows });
+      next();
+    }); 
   }
+
 }
 
 export default adsMiddleware;
