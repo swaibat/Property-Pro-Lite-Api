@@ -32,15 +32,12 @@ class Agent extends User {
     propertys.push(property);
   }
 
-  static updateProperty(property,price, address, city, state, type, imageUrl){
-    property.price = price;
-    property.city = city;
-    property.address = address;
-    property.type = type;
-    property.state = state;
-    property.imageUrl = imageUrl;
-    return property;
+  static updateProperty(address, state, city, id) {
+    const query = 'UPDATE property SET address=$1,city=$2,state=$3 WHERE id=$4 RETURNING *';
+    const value = [address,city, state, id];
+    return client.query(query, value);
   }
+
 
   static markPropertySold(property){
     property.status = 'sold';

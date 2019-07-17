@@ -24,28 +24,28 @@ class adsMiddleware {
   }
 
   static getPropertyById(req, res, next) {
-    const { Id } = req.params;
-    const validparam = Id.match(/^[0-9]+$/);
-    if (!validparam) return Resp(400, 'provide a valid number in parameters', res);
-    res.locals.property = propertys.find(property => property.id === parseFloat(Id));
-    if (!res.locals.property) {
-      return Resp(404, 'property with given id not Found', res);
-    }
-    next();
+    const property =  Property.getPropertyById(req.params.Id);
+    property.then(e => {
+      res.locals.property = e.rows[0];
+      if (!res.locals.property) return res.status(404).send({ error: 404, message: 'property with given id not Found' });
+      next();
+    });
   }
-
+  
+  // find if atall that agent owners the advert he wants to do operations on
+  static AgentAndOwner(req, res, next) {
+    const owner = Property.getPropertyByOwner(res.locals.user.id);
+    console.log(res.locals.user.id)
+    owner.then(e => {
+      if (!e.rows[0]) return res.status(403).send({ error: 403, message: 'Your do not own this property' });
+      next();
+    });
+  }
   static async checkIfAdExist(req, res, next) {
     const ownerId = res.locals.user.id;
     const { price, address, type } = req.body;
     const foundProperty = await Property.checkIfPropertyExist(ownerId, price, address, type);
     if (foundProperty) return Resp(403, 'You can not post this propety again', res);
-    next();
-  }
-
-  // find if atall that agent owners the advert he wants to do operations on
-  static AgentAndOwner(req, res, next) {
-    const { user, property } = res.locals;
-    if (user.id !== property.owner.id) return Resp(403, 'Your do not own this property', res);
     next();
   }
 
