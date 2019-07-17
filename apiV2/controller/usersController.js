@@ -15,12 +15,12 @@ class UserController {
     const userObj = new User(firstName, lastName, email, address, phoneNumber, hashPassword, isAgent);
     userObj.createUser();
     const { token } = res.locals;
-    return Resp.successHandler(201, req.path, token, res);
+    return Resp(201, 'signed up successfully', token, res);
   }
 
   signIn(req, res) {
     const { token } = res.locals;
-    return Resp.successHandler(200, req.path, token, res);
+    return Resp(200, 'signed in successfully', token, res);
   }
 }
 

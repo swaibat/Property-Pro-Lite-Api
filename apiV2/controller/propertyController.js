@@ -13,7 +13,7 @@ class PropertyController {
     const property = adObj.addProperty(adObj);
     property.then((e) => {
       console.log(req.path);
-      return Resp.successAdsHandler(201, 'Property created', e.rows[0], res);
+      return Resp(201, 'Property created', e.rows[0], res);
       // res.status(201).send({ status: 201, property: e.rows[0] });
     });
   }
