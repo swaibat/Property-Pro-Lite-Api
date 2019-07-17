@@ -3,8 +3,7 @@ import Joi from '@hapi/joi';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { User } from '../models/users';
-import Resp from '../helpers/response';
-import Err from '../helpers/errors';
+import errHandle from '../helpers/errors';
 
 dotenv.config();
 
@@ -24,7 +23,7 @@ class authMiddleware {
     if (data.error) {
       const resFomart = data.error.details[0].message.replace('"', '').split('"');
       const gotElem = resFomart[0];
-      return Err(400, `${gotElem} field  is invalid `, res)
+      return errHandle(400, `${gotElem} field  is invalid `, res)
     }
     next();
   }
@@ -32,7 +31,7 @@ class authMiddleware {
   // verify user token
   static verifyToken(req, res, next) {
     const bearerHeader = req.headers.authorization;
-    if (typeof bearerHeader === 'undefined') return Err(403, 'provide a token to get our services', res);
+    if (typeof bearerHeader === 'undefined') return errHandle(403, 'provide a token to get our services', res);
     const bearer = bearerHeader.split(' ');
     // get token from array
     const bearerToken = bearer[1];
@@ -43,7 +42,7 @@ class authMiddleware {
   // check if real users trying access
   static ensureUserToken(req, res, next) {
     jwt.verify(res.locals.token, process.env.appSecreteKey, async (err, user) => {
-      if (err) return Err(403, err.message, res);
+      if (err) return errHandle(403, err.message, res);
       const dbUser = await User.getUserByEmail(user.email);
       res.locals.user = dbUser.rows[0];
       next();
@@ -60,7 +59,7 @@ class authMiddleware {
   // check if user already exists
   static async checkUserExists(req, res, next) {
     const user = await User.getUserByEmail(req.body.email);
-    if (user.rows[0]) return Err(409, 'user already exists', res);
+    if (user.rows[0]) return errHandle(409, 'user already exists', res);
     return next();
   }
 
@@ -68,15 +67,15 @@ class authMiddleware {
   static async checkNoUser(req, res, next) {
     const { email, password } = req.body;
     const user = await User.getUserByEmail(email);
-    if (!user.rows[0]) return Err(404, 'user doesnt exist please signup', res);
+    if (!user.rows[0]) return errHandle(404, 'user doesnt exist please signup', res);
     const passCompare = bcrypt.compareSync(password, user.rows[0].password);
-    if (!passCompare) return Err(400, 'wrong username or password', res);
+    if (!passCompare) return errHandle(400, 'wrong username or password', res);
     return next();
   }
 
   // check if the user is an agent
   static agentCheck(req, res, next) {
-    if (res.locals.user.isagent === false) return Err(403, 'Only agent can access this service', res);
+    if (res.locals.user.isagent === false) return errHandle(403, 'Only agent can access this service', res);
     next();
 }
 }

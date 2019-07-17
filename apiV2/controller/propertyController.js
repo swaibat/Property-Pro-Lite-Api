@@ -1,7 +1,6 @@
 import Property from '../models/property';
-import { propertys } from '../data/data';
 import { Agent, User } from '../models/users';
-import Resp from '../helpers/response';
+import resHandle from '../helpers/response';
 
 class PropertyController {
   postProperty(req, res) {
@@ -11,11 +10,7 @@ class PropertyController {
     const { id } = res.locals.user;
     const adObj = new Property(id, price, address, city, state, type, imageUrl);
     const property = adObj.addProperty(adObj);
-    property.then((e) => {
-      console.log(req.path);
-      return Resp(201, 'Property created', e.rows[0], res);
-      // res.status(201).send({ status: 201, property: e.rows[0] });
-    });
+    property.then((e) => resHandle(201, 'Property created', e.rows[0], res));
   }
 
   updateProperty(req, res) {

@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 import { User } from '../models/users';
-import Resp from '../helpers/response';
+import resHandle from '../helpers/response';
 import '@babel/polyfill';
 
 dotenv.config();
@@ -15,12 +15,12 @@ class UserController {
     const userObj = new User(firstName, lastName, email, address, phoneNumber, hashPassword, isAgent);
     userObj.createUser();
     const { token } = res.locals;
-    return Resp(201, 'signed up successfully', token, res);
+    return resHandle(201, 'signed up successfully', token, res);
   }
 
   signIn(req, res) {
     const { token } = res.locals;
-    return Resp(200, 'signed in successfully', token, res);
+    return resHandle(200, 'signed in successfully', token, res);
   }
 }
 
