@@ -39,9 +39,10 @@ class Agent extends User {
   }
 
 
-  static markPropertySold(property){
-    property.status = 'sold';
-    return property;
+  static markPropertySold(id) {
+    const query = 'UPDATE property SET status=$1 WHERE id=$2 RETURNING *';
+    const value = ['sold', id];
+    return client.query(query, value);
   }
 
   static deleteProperty(property){
