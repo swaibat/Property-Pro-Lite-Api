@@ -31,8 +31,7 @@ class PropertyController {
 
   getAllProperty(req, res) {
     const property = User.allProperty();
-    if (property.length < 1) return res.status(404).send({ status: 404, error: 'Ooops no property  found' });
-    res.status(200).send({ status: 200, property });
+    property.then(e => resHandle(200, 'all available property', e.rows, res));
   }
 
   singleProperty(req, res) {
