@@ -23,6 +23,12 @@ class User {
     return client.query(query, values);
   }
 
+  static queryTypeOfProperty(type) {
+    const query = 'SELECT * FROM property WHERE type=$1 ';
+    const value = [type];
+    return client.query(query, value);
+  }
+
   static allProperty() {
     const query = 'SELECT * FROM property ';
     return client.query(query);
