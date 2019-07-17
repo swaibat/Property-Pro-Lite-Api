@@ -1,22 +1,26 @@
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
-import { User} from '../models/users';
+import { User } from '../models/users';
+import resHandle from '../helpers/response';
 import '@babel/polyfill';
 
 dotenv.config();
 
 class UserController {
-
   signUp(req, res) {
-    const {firstName, lastName, email, address, phoneNumber, isAgent } = req.body;
+    const {
+      firstName, lastName, email, address, phoneNumber, isAgent,
+    } = req.body;
     const hashPassword = bcrypt.hashSync(req.body.password, 10);
     const userObj = new User(firstName, lastName, email, address, phoneNumber, hashPassword, isAgent);
-      userObj.createUser();
-      return res.status(201).send({status: 201,message:'Signed up successfully',token:res.locals.token});
+    userObj.createUser();
+    const { token } = res.locals;
+    return resHandle(201, 'signed up successfully', token, res);
   }
 
   signIn(req, res) {
-    return res.status(200).send({status: 200,message:'Signin successfully',token:res.locals.token});
+    const { token } = res.locals;
+    return resHandle(200, 'signed in successfully', token, res);
   }
 }
 
