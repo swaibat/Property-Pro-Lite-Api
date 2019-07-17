@@ -16,13 +16,12 @@ class PropertyController {
   updateProperty(req, res) {
     const { address, city, state } = req.body;
     const property = Agent.updateProperty(address, state, city, req.params.Id);
-    property.then(e => resHandle(201, 'Property Updated', e.rows[0], res));
+    property.then(e => resHandle(200, 'Property Updated', e.rows[0], res));
   }
 
   markSold(req, res) {
-    const { property } = res.locals;
-    const advert = Agent.markPropertySold(property);
-    res.status(200).send({ status: 200, property: advert });
+    const property = Agent.markPropertySold(req.params.Id);
+    property.then(e => resHandle(200, 'property marked as sold', e.rows[0], res));
   }
 
   deleteProperty(req, res) {
