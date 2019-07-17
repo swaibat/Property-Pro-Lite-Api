@@ -25,8 +25,7 @@ class PropertyController {
   }
 
   deleteProperty(req, res) {
-    const { property } = res.locals;
-    Agent.deleteProperty(property);
+    Agent.delProperty(req.params.Id);
     return res.status(200).send({ status: 200, message: 'property deleted successfully' });
   }
 

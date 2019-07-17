@@ -45,9 +45,10 @@ class Agent extends User {
     return client.query(query, value);
   }
 
-  static deleteProperty(property){
-    const findIndex = propertys.indexOf(property);
-    propertys.splice(findIndex, 1);
+  static delProperty(id) {
+    const query = 'DELETE FROM  property WHERE id=$1 RETURNING *';
+    const value = [id];
+    return client.query(query, value);
   }
 }
 
