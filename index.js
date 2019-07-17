@@ -1,15 +1,14 @@
-/* eslint-disable linebreak-style */
 import express from 'express';
-import userRoutes from './apiv2/routes/auth';
-import bodyParser from 'body-parser'
-import propertyRoutes from './apiv2/routes/property';
+import bodyParser from 'body-parser';
 import swaggerUI from 'swagger-ui-express';
+import userRoutes from './apiv2/routes/auth';
+import propertyRoutes from './apiv2/routes/property';
 import swaggerDoc from './swagger.json';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-app.use( bodyParser.json());  
-app.use(bodyParser.urlencoded({extended: true})); 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/property', propertyRoutes);
@@ -27,7 +26,6 @@ app.use((error, req, res, next) => {
   next();
 });
 
-// eslint-disable-next-line no-console
 app.listen(PORT, () => console.log(`listening on port ${PORT}, ${process.env.NODE_ENV} ...`));
 
 export default app;
