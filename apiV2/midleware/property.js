@@ -1,8 +1,11 @@
 import Joi from '@hapi/joi';
 import Property from '../models/property';
-import { User } from '../models/users';
-import Resp from '../helpers/response';
-import Err from '../helpers/errors';
+import {
+  User,
+}
+  from '../models/users';
+import resHandle from '../helpers/response';
+import errHandle from '../helpers/errors';
 
 class adsMiddleware {
   static adsValidator(req, res, next) {
@@ -18,42 +21,47 @@ class adsMiddleware {
     if (data.error) {
       const resFomart = data.error.details[0].message.replace('"', '').split('"');
       const gotElem = resFomart[0];
-      return Err(400, `${gotElem} field  is invalid `, res)
+      return errHandle(400, `${gotElem} field  is invalid `, res);
     }
     next();
   }
 
   static getPropertyById(req, res, next) {
-    const property =  Property.getPropertyById(req.params.Id);
-    property.then(e => {
+    const property = Property.getPropertyById(req.params.Id);
+    property.then((e) => {
       res.locals.property = e.rows[0];
-      if (!res.locals.property) return res.status(404).send({ error: 404, message: 'property with given id not Found' });
+      if (!res.locals.property) return errHandle(404, 'property with given id not Found', res);
       next();
     });
   }
-  
+
   // find if atall that agent owners the advert he wants to do operations on
   static AgentAndOwner(req, res, next) {
     const owner = Property.getPropertyByOwner(res.locals.user.id);
-    owner.then(e => {
-      if (!e.rows[0]) return res.status(403).send({ error: 403, message: 'Your do not own this property' });
+    owner.then((e) => {
+      if (!e.rows[0]) return errHandle(403, 'Your do not own this property', res);
       next();
     });
   }
-  static async checkIfAdExist(req, res, next) {
+
+  static checkIfAdExist(req, res, next) {
     const ownerId = res.locals.user.id;
-    const { price, address, type } = req.body;
-    const foundProperty = await Property.checkIfPropertyExist(ownerId, price, address, type);
-    if (foundProperty) return Resp(403, 'You can not post this propety again', res);
+    const {
+      price, address, type,
+    } = req.body;
+    const foundProperty = Property.checkIfPropertyExist(ownerId, price, address, type);
+    if (foundProperty) return errHandle(403, 'You can not post this propety again', res);
     next();
   }
 
   static queryType(req, res, next) {
-    const property =  User.queryTypeOfProperty(req.query.type);
-    property.then(e => {
-      if (typeof req.query.type !== 'undefined') return res.status(200).send({ status: 200, property: e.rows });
-      next();
-    }); 
+    if (typeof req.query.type !== 'undefined') {
+      const property = User.queryTypeOfProperty(req.query.type, res.locals.user.isagent);
+      const matchType = req.query.type.match(/^(1bedrooms|3bedrooms|5bedrooms|miniFlat|others)$/);
+      if (!matchType) return errHandle(400, 'We only have these types 1bedrooms, 3bedrooms, 5bedrooms, miniFlat ,others', res);
+      return property.then(e => resHandle(200, 'operation successfull', e.rows, res));
+    }
+    next();
   }
 
 }

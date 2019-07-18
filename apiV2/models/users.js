@@ -23,16 +23,25 @@ class User {
     return client.query(query, values);
   }
 
-  static queryTypeOfProperty(type) {
-    const query = 'SELECT * FROM property WHERE type=$1 ';
+  static queryTypeOfProperty(type, isagent) {
+    const query = isagent
+      ? 'SELECT * FROM property WHERE type=$1 '
+      : `SELECT * FROM property
+    WHERE type=$1 and status='available' `;
+
     const value = [type];
     return client.query(query, value);
   }
 
-  static allProperty() {
-    const query = 'SELECT * FROM property ';
+
+  static allProperty(isagent) {
+    const query = isagent
+      ? 'SELECT * FROM property '
+      : `SELECT * FROM property
+    WHERE status='available' `;
     return client.query(query);
   }
+
 }
 
 class Agent extends User {

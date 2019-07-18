@@ -24,9 +24,8 @@ describe('/POST/signup routes', () => {
       .end((err, res) => {
         res.should.have.status(201);
         res.body.should.be.a('object');
-        res.body.should.have.property('token')
-        res.body.should.have.property('message').eql('Signed up successfully');
-        userToken = res.body.token;
+        res.body.should.have.property('status').eql(201);
+        userToken = res.body.data.token;
         done();
       });
   });
@@ -38,7 +37,7 @@ describe('/POST/signup routes', () => {
         res.should.have.status(201);
         res.body.should.be.a('object');
         res.body.should.have.property('status').eql(201);
-        agentToken = res.body.token;
+        agentToken = res.body.data.token;
         done();
       });
   });
@@ -204,13 +203,13 @@ describe('ALL AGENT strict routes', () => {
   });
   it('view specific property', (done) => {
     chai.request(app)
-          .get('/api/v1/property?type=3bedrooms')
-          .set('Authorization', `Bearer ${userToken}`)
-          .end((err, res) => {
-            res.should.have.status(200);
-            done();
-          });
+      .get('/api/v1/property?type=3bedrooms')
+      .set('Authorization', `Bearer ${userToken}`)
+      .end((err, res) => {
+        res.should.have.status(200);
+        done();
       });
+  });
 });
 describe('/CHECK tokens and relevant middlewares', () => {
   it('CHECK if token is provided', (done) => {
@@ -298,7 +297,7 @@ describe('/VALIDATES all input fields', () => {
         res.should.have.status(400);
         res.body.should.be.a('object');
         res.body.should.have.property('status').eql(400);
-        res.body.should.have.property('error').eql("firstName field  is invalid ");
+        res.body.should.have.property('error').eql('firstName field  is invalid ');
         done();
       });
   });
@@ -316,23 +315,23 @@ describe('/VALIDATES all input fields', () => {
   });
   it('view specific property', (done) => {
     chai.request(app)
-          .get('/api/v1/property?type=bedrooms')
-          .set('Authorization', `Bearer ${userToken}`)
-          .end((err, res) => {
-            res.should.have.status(400);
-            res.body.should.have.property('error').eql('We only have these types 1bedrooms, 3bedrooms, 5bedrooms, miniFlat ,others');
-            done();
-          });
+      .get('/api/v1/property?type=bedrooms')
+      .set('Authorization', `Bearer ${userToken}`)
+      .end((err, res) => {
+        res.should.have.status(400);
+        res.body.should.have.property('error').eql('We only have these types 1bedrooms, 3bedrooms, 5bedrooms, miniFlat ,others');
+        done();
+      });
   });
   it('view specific property', (done) => {
     chai.request(app)
-          .get('/api/v1/property?type=1bedrooms')
-          .set('Authorization', `Bearer ${userToken}`)
-          .end((err, res) => {
-            res.should.have.status(404);
-            res.body.should.have.property('error').eql('Ooops property type not found');
-            done();
-          });
+      .get('/api/v1/property?type=1bedrooms')
+      .set('Authorization', `Bearer ${userToken}`)
+      .end((err, res) => {
+        res.should.have.status(404);
+        res.body.should.have.property('error').eql('Ooops property type not found');
+        done();
+      });
   });
-  
+
 });
