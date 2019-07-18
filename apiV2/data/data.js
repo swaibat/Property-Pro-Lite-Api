@@ -24,11 +24,11 @@ export const testdata = [
   {
     firstName: 'agenttest',
     lastName: 'agent',
-    email: 'agenttest@gmail.com',
+    email: `${Math.random().toString(35).slice(2)}@gmail.com`,
     address: 'kampala',
     phoneNumber: '07753225633',
     password: 'agenttest',
-    isAdmin: true,
+    isAgent: true,
   },
   {
     firstName: 'agent test',
@@ -37,7 +37,7 @@ export const testdata = [
     address: 'kampala',
     phoneNumber: '07753225633',
     password: 'agenttest',
-    isAdmin: true,
+    isAgent: true,
   },
   {
     firstName: 'agen',

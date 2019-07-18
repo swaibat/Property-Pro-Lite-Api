@@ -30,7 +30,7 @@ class PropertyController {
   }
 
   getAllProperty(req, res) {
-    const property = User.allProperty();
+    const property = User.allProperty(res.locals.user.isagent);
     property.then(e => resHandle(200, 'all available property', e.rows, res));
   }
 

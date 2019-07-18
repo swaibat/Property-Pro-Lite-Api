@@ -24,5 +24,13 @@ class Property {
     const value = [id];
     return client.query(IdQuery,value )
   }
+
+  static checkIfPropertyExist(ownerId,price,address,type){
+    const typeQuery = 'SELECT * FROM property WHERE owner=$1 and price=$2 and'
+    return propertys.find(advert => advert.owner.id === ownerId &&
+      advert.price === price &&
+      advert.address === address &&
+      advert.type === type);
+  }
 }
 export default Property;

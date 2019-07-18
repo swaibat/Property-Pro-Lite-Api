@@ -20,10 +20,11 @@ class authMiddleware {
       isAgent: Joi.required(),
     });
     const data = Joi.validate(req.body, authSchema);
+    if (typeof req.body.isAgent !== 'boolean') return errHandle(400, 'isAgent should be a boolean', res)
     if (data.error) {
       const resFomart = data.error.details[0].message.replace('"', '').split('"');
       const gotElem = resFomart[0];
-      return errHandle(400, `${gotElem} field  is invalid `, res)
+      return errHandle(400, `${gotElem} field  is invalid `, res);
     }
     next();
   }
@@ -41,11 +42,16 @@ class authMiddleware {
 
   // check if real users trying access
   static ensureUserToken(req, res, next) {
-    jwt.verify(res.locals.token, process.env.appSecreteKey, async (err, user) => {
-      if (err) return errHandle(403, err.message, res);
-      const dbUser = await User.getUserByEmail(user.email);
-      res.locals.user = dbUser.rows[0];
-      next();
+    jwt.verify(res.locals.token, process.env.appSecreteKey, (err, user) => {
+      if (err){
+        let newMsg = err.message.replace("jwt", "Token");
+        if (newMsg) return errHandle(403, err.message, res);;
+      } 
+      const dbUser = User.getUserByEmail(user.email);
+      dbUser.then((u) => {
+        res.locals.user = u.rows[0];
+        return next();
+      });
     });
   }
 
@@ -57,27 +63,32 @@ class authMiddleware {
   }
 
   // check if user already exists
-  static async checkUserExists(req, res, next) {
-    const user = await User.getUserByEmail(req.body.email);
-    if (user.rows[0]) return errHandle(409, 'user already exists', res);
-    return next();
+  static checkUserExists(req, res, next) {
+    const user = User.getUserByEmail(req.body.email);
+    user.then(newUser =>{
+      if (newUser.rows[0]) return errHandle(409, 'user already exists', res);
+      return next();
+    })
   }
 
   // check if user already exists
-  static async checkNoUser(req, res, next) {
+  static checkNoUser(req, res, next) {
     const { email, password } = req.body;
-    const user = await User.getUserByEmail(email);
-    if (!user.rows[0]) return errHandle(404, 'user doesnt exist please signup', res);
-    const passCompare = bcrypt.compareSync(password, user.rows[0].password);
-    if (!passCompare) return errHandle(400, 'wrong username or password', res);
-    return next();
+    const user = User.getUserByEmail(email);
+    user.then((u) => {
+      if (!u.rows[0]) return errHandle(404, 'user doesnt exist please signup', res);
+      const passCompare = bcrypt.compareSync(password, u.rows[0].password);
+      if (!passCompare) return errHandle(400, 'wrong username or password', res);
+      return next();
+    });
   }
 
   // check if the user is an agent
   static agentCheck(req, res, next) {
+    
     if (res.locals.user.isagent === false) return errHandle(403, 'Only agent can access this service', res);
     next();
-}
+  }
 }
 
 export default authMiddleware;
