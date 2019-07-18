@@ -4,9 +4,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 // ternary operator
-const client = process.env.NODE_ENV === 'test'
-  ? new Client({ connectionString: process.env.TESTDB_URL })
-  : new Client({ connectionString: process.env.DATABASE_URL });
+const client = new Client({ connectionString: process.env.DATABASE_URL });
 
 
 const users = `CREATE TABLE IF NOT EXISTS
@@ -49,11 +47,8 @@ const delproperty = 'DROP TABLE IF EXISTS property';
 const delflags = 'DROP TABLE IF EXISTS flags';
 
 client.connect()
-  .then(() => console.log('connected . . .'))
   .then(() => client.query(users))
   .then(() => client.query(property))
   .then(() => client.query(flags))
-  .catch(e => console.log(e.message));
-
 
 export default client;

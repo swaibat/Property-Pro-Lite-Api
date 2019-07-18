@@ -26,6 +26,6 @@ app.use((error, req, res, next) => {
   next();
 });
 
-app.listen(PORT, () => console.log(`listening on port ${PORT}, ${process.env.NODE_ENV} ...`));
+app.listen(PORT);
 
 export default app;
