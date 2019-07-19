@@ -41,9 +41,15 @@ const flags = `CREATE TABLE IF NOT EXISTS
         createdOn timestamp without time zone DEFAULT now() NOT NULL
     )`;
 
- client.connect()
-    .then(() => client.query(users))
-    .then(() => client.query(property))
+    client.connect()
+
+    export function dropTables(){
+        client.query('DROP TABLE IF EXISTS users');
+        client.query('DROP TABLE IF EXISTS property');
+    }
+    
+   client.query(users)
+   client.query(property)
     
 export default client;
 require('make-runnable');
