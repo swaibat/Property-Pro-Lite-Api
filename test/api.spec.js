@@ -15,7 +15,7 @@ app.use('/api/v1/property', propertyRoutes);
 const should = chai.should();
 let agentToken = '';
 let userToken = '';
-let agentTwo =''
+let agentTwo = '';
 
 chai.use(chaiHttp);
 
@@ -231,7 +231,7 @@ describe('/CHECK tokens and relevant middlewares', () => {
         done();
       });
   });
-  
+
   it('GET NOTFOUND Property', (done) => {
     chai.request(app)
       .get('/api/v1/property/9')
