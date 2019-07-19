@@ -9,7 +9,7 @@ services:
   - postgresql
 
 before_script:
-  - psql -c 'CREATE DATABASE testDb;' -U postgres
+  - psql -c 'CREATE DATABASE propertyprolitedb;' -U postgres
 
 script:
   - npm test

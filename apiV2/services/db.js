@@ -40,11 +40,10 @@ const flags = `CREATE TABLE IF NOT EXISTS
         description VARCHAR (255)  NOT NULL,
         createdOn timestamp without time zone DEFAULT now() NOT NULL
     )`;
-client.connect();
 
-client.query(users);
-client.query(property);
-
-
+ client.connect()
+    .then(() => client.query(users))
+    .then(() => client.query(property))
+    
 export default client;
 require('make-runnable');
