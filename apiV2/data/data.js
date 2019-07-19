@@ -14,8 +14,8 @@ export const testdata = [
   { lastName: 'menk' },
   { firstName: 1 },
   {
-    email: 'vella@gmail.com',
-    password: 'vella',
+    email:"agent@gmail.com",
+    password:"Kanyanyama01"
   },
   {
     email: 'amaar@gmail.com',
@@ -24,7 +24,7 @@ export const testdata = [
   {
     firstName: 'agenttest',
     lastName: 'agent',
-    email: `${Math.random().toString(35).slice(2)}@gmail.com`,
+    email: `geton@gmail.com`,
     address: 'kampala',
     phoneNumber: '07753225633',
     password: 'agenttest',
@@ -66,7 +66,24 @@ export const testdata = [
     password: 'agenttest',
     isAdmin: 'true',
   },
-
+  {
+    firstName: 'vella',
+    lastName: 'vella',
+    email: 'agent@gmail.com',
+    address: 'kampala',
+    phoneNumber: '07753225633',
+    password: 'vella',
+    isAgent: false,
+  },
+  {
+    firstName: 'agenttest',
+    lastName: 'agent',
+    email: `getonb@gmail.com`,
+    address: 'kampala',
+    phoneNumber: '07753225633',
+    password: 'agenttest',
+    isAgent: true,
+  },
 ];
 
 export const testAds = [
@@ -118,6 +135,24 @@ export const testAds = [
   },
   {
     price: 200,
+    city: 'false',
+    state: 'central',
+    address: 'kampala',
+    type: '3bedrooms',
+    imageUrl: 'images/hose1.mp4',
+    status: 'available',
+  },
+  {
+    price: 200,
+    city: 'false',
+    state: 'central',
+    address: 'kampala',
+    type: '3bedrooms',
+    imageUrl: 'images/hose1.mp4',
+    status: 'available',
+  },
+  {
+    price: "200",
     city: 'false',
     state: 'central',
     address: 'kampala',

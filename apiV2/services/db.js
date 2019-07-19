@@ -3,9 +3,9 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-// ternary operator
-const client = new Client({ connectionString: process.env.DATABASE_URL });
-
+const client = process.env.NODE_ENV === 'test'
+  ? new Client({ connectionString: process.env.TESTDB_URL })
+  : new Client({ connectionString: process.env.DATABASE_URL });
 
 const users = `CREATE TABLE IF NOT EXISTS
       users (
@@ -40,15 +40,11 @@ const flags = `CREATE TABLE IF NOT EXISTS
         description VARCHAR (255)  NOT NULL,
         createdOn timestamp without time zone DEFAULT now() NOT NULL
     )`;
+client.connect();
 
+client.query(users);
+client.query(property);
 
-const delUser = 'DROP TABLE IF EXISTS users';
-const delproperty = 'DROP TABLE IF EXISTS property';
-const delflags = 'DROP TABLE IF EXISTS flags';
-
-client.connect()
-  .then(() => client.query(users))
-  .then(() => client.query(property))
-  .then(() => client.query(flags))
 
 export default client;
+require('make-runnable');

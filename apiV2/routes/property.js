@@ -9,7 +9,7 @@ router.use(Auth.verifyToken, Auth.ensureUserToken);
 const property = new PropertyController();
 
 // create property
-router.post('/', Ads.adsValidator, Auth.agentCheck, property.postProperty);
+router.post('/', Ads.adsValidator, Auth.agentCheck,Ads.checkIfAdExist, property.postProperty);
 
 // update his own property
 router.patch('/:Id', Ads.getPropertyById, Ads.AgentAndOwner, property.updateProperty);
