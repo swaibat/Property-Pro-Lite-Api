@@ -327,6 +327,4 @@ describe('/VALIDATES all input fields', () => {
     client.query('DROP TABLE IF EXISTS users');
     client.query('DROP TABLE IF EXISTS property');
   });
-  
-
 });

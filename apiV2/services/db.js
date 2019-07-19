@@ -46,4 +46,3 @@ const flags = `CREATE TABLE IF NOT EXISTS
     .then(() => client.query(property))
     
 export default client;
-require('make-runnable');
