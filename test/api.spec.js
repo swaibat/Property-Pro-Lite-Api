@@ -1,5 +1,3 @@
-process.env.NODE_ENV = 'test';
-
 import express from 'express';
 import chai from 'chai';
 import chaiHttp from 'chai-http';
