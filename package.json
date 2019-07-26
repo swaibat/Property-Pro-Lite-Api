@@ -16,7 +16,7 @@
     "dev": "nodemon --exec babel-node index.js ",
     "test": "nyc mocha --exit",
     "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls ",
-    "drop": "babel-node ./apiV2/services/db dropTables"
+    "drop": "babel-node ./api/services/db dropTables"
   },
   "repository": {
     "type": "git",

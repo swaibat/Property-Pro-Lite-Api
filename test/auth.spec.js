@@ -1,6 +1,6 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
-import { testdata } from '../apiV2/data/data';
+import { testdata } from '../api/data/data';
 import app from "../index";
 
 const should = chai.should();
@@ -10,7 +10,7 @@ chai.use(chaiHttp);
 describe('/POST/signup routes', () => {
     it('CREATES a new User', (done) => {
       chai.request(app)
-        .post('/api/v1/users/auth/signup')
+        .post('/api/v2/users/auth/signup')
         .send(testdata[0])
         .end((err, res) => {
           res.should.have.status(201);
@@ -21,7 +21,7 @@ describe('/POST/signup routes', () => {
     });
     it('CREATES a new Agent', (done) => {
       chai.request(app)
-        .post('/api/v1/users/auth/signup')
+        .post('/api/v2/users/auth/signup')
         .send(testdata[5])
         .end((err, res) => {
           res.should.have.status(201);
@@ -32,7 +32,7 @@ describe('/POST/signup routes', () => {
     });
     it('CREATES a new Agent two', (done) => {
       chai.request(app)
-        .post('/api/v1/users/auth/signup')
+        .post('/api/v2/users/auth/signup')
         .send(testdata[11])
         .end((err, res) => {
           res.should.have.status(201);
@@ -43,7 +43,7 @@ describe('/POST/signup routes', () => {
     });
     it('CHECKS if User already Exists', (done) => {
       chai.request(app)
-        .post('/api/v1/users/auth/signup')
+        .post('/api/v2/users/auth/signup')
         .send(testdata[5])
         .end((err, res) => {
           res.should.have.status(409);
@@ -57,7 +57,7 @@ describe('/POST/signup routes', () => {
   describe('/POST/signin routes', () => {
     it('ENABLE User login', (done) => {
       chai.request(app)
-        .post('/api/v1/users/auth/signin')
+        .post('/api/v2/users/auth/signin')
         .send(testdata[5])
         .end((err, res) => {
           res.should.have.status(200);
@@ -69,7 +69,7 @@ describe('/POST/signup routes', () => {
     });
     it('CHECK if User provided details are wrong', (done) => {
       chai.request(app)
-        .post('/api/v1/users/auth/signin')
+        .post('/api/v2/users/auth/signin')
         .send(testdata[4])
         .end((err, res) => {
           res.should.have.status(404);
@@ -81,7 +81,7 @@ describe('/POST/signup routes', () => {
     });
     it('CHECK if User provided details are wrong', (done) => {
         chai.request(app)
-          .post('/api/v1/users/auth/signin')
+          .post('/api/v2/users/auth/signin')
           .send(testdata[12])
           .end((err, res) => {
             res.should.have.status(400);
@@ -93,7 +93,7 @@ describe('/POST/signup routes', () => {
       });
     it('CHECK if User doesnt Exists', (done) => {
       chai.request(app)
-        .post('/api/v1/users/auth/signin')
+        .post('/api/v2/users/auth/signin')
         .send(testdata[101])
         .end((err, res) => {
           res.should.have.status(404);
@@ -104,7 +104,7 @@ describe('/POST/signup routes', () => {
     });
     it('CHECK if User doesnt Exists', (done) => {
         chai.request(app)
-          .post('/api/v1/users/auth/signup')
+          .post('/api/v2/users/auth/signup')
           .send(testdata[13])
           .end((err, res) => {
             res.should.have.status(400);
@@ -116,7 +116,7 @@ describe('/POST/signup routes', () => {
       });
       it('Method not allowed', (done) => {
         chai.request(app)
-          .patch('/api/v1/users/auth/signup')
+          .patch('/api/v2/users/auth/signup')
           .end((err, res) => {
             res.should.have.status(405);
             res.body.should.be.a('object');

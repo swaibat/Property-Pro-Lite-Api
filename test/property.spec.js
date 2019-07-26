@@ -1,6 +1,6 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
-import { testdata, testAds } from '../apiV2/data/data';
+import { testdata, testAds } from '../api/data/data';
 import app from "../index";
 
 const should = chai.should();
@@ -13,7 +13,7 @@ chai.use(chaiHttp);
 describe('routes', () => {
   it('User', (done) => {
     chai.request(app)
-      .post('/api/v1/users/auth/signin')
+      .post('/api/v2/users/auth/signin')
       .send(testdata[0])
       .end((err, res) => {
         userToken = res.body.data.token;
@@ -22,7 +22,7 @@ describe('routes', () => {
   });
   it('Agent', (done) => {
     chai.request(app)
-      .post('/api/v1/users/auth/signin')
+      .post('/api/v2/users/auth/signin')
       .send(testdata[5])
       .end((err, res) => {
         agentToken = res.body.data.token;
@@ -31,7 +31,7 @@ describe('routes', () => {
   });
   it('Agent two', (done) => {
     chai.request(app)
-      .post('/api/v1/users/auth/signin')
+      .post('/api/v2/users/auth/signin')
       .send(testdata[11])
       .end((err, res) => {
         agentTwo = res.body.data.token;
@@ -43,7 +43,7 @@ describe('routes', () => {
 describe('ALL AGENT strict routes', () => {
   it('CREATES a new Property', (done) => {
     chai.request(app)
-      .post('/api/v1/property')
+      .post('/api/v2/property')
       .set('Authorization', `Bearer ${agentToken}`)
       .send(testAds[0])
       .end((err, res) => {
@@ -58,7 +58,7 @@ describe('ALL AGENT strict routes', () => {
   });
   it('CREATES a new Property validation', (done) => {
     chai.request(app)
-      .post('/api/v1/property')
+      .post('/api/v2/property')
       .set('Authorization', `Bearer ${agentToken}`)
       .send(testAds[9])
       .end((err, res) => {
@@ -70,7 +70,7 @@ describe('ALL AGENT strict routes', () => {
   });
   it('CHECK if property exists', (done) => {
     chai.request(app)
-      .post('/api/v1/property')
+      .post('/api/v2/property')
       .set('Authorization', `Bearer ${agentToken}`)
       .send(testAds[0])
       .end((err, res) => {
@@ -82,7 +82,7 @@ describe('ALL AGENT strict routes', () => {
   });
   it('UPDATE a Property', (done) => {
     chai.request(app)
-      .patch('/api/v1/property/1')
+      .patch('/api/v2/property/1')
       .set('Authorization', `Bearer ${agentToken}`)
       .send(testAds[2])
       .end((err, res) => {
@@ -97,7 +97,7 @@ describe('ALL AGENT strict routes', () => {
   });
   it('PATCH a Property', (done) => {
     chai.request(app)
-      .patch('/api/v1/property/1/sold')
+      .patch('/api/v2/property/1/sold')
       .set('Authorization', `Bearer ${agentToken}`)
       .send(testAds[2])
       .end((err, res) => {
@@ -111,7 +111,7 @@ describe('ALL AGENT strict routes', () => {
   });
   it('GET a specific Property', (done) => {
     chai.request(app)
-      .get('/api/v1/property/1')
+      .get('/api/v2/property/1')
       .set('Authorization', `Bearer ${agentToken}`)
       .end((err, res) => {
         res.should.have.status(200);
@@ -121,7 +121,7 @@ describe('ALL AGENT strict routes', () => {
   });
   it('CHECK agent ownership', (done) => {
     chai.request(app)
-      .patch('/api/v1/property/1/sold')
+      .patch('/api/v2/property/1/sold')
       .set('Authorization', `Bearer ${agentTwo}`)
       .end((err, res) => {
         res.should.have.status(403);
@@ -131,7 +131,7 @@ describe('ALL AGENT strict routes', () => {
   });
   it('VIEW all Property', (done) => {
     chai.request(app)
-      .get('/api/v1/property')
+      .get('/api/v2/property')
       .set('Authorization', `Bearer ${userToken}`)
       .end((err, res) => {
         res.should.have.status(404);
@@ -140,7 +140,7 @@ describe('ALL AGENT strict routes', () => {
   });
   it('VIEW all Propertys agent', (done) => {
     chai.request(app)
-      .get('/api/v1/property')
+      .get('/api/v2/property')
       .set('Authorization', `Bearer ${agentToken}`)
       .end((err, res) => {
         res.should.have.status(200);
@@ -154,7 +154,7 @@ describe('ALL AGENT strict routes', () => {
 describe('/CHECK tokens and relevant middlewares', () => {
   it('CHECK if token is provided', (done) => {
     chai.request(app)
-      .get('/api/v1/property')
+      .get('/api/v2/property')
       .end((err, res) => {
         res.should.have.status(403);
         res.body.should.be.a('object');
@@ -164,7 +164,7 @@ describe('/CHECK tokens and relevant middlewares', () => {
   });
   it('CHECK for ivalid token', (done) => {
     chai.request(app)
-      .get('/api/v1/property')
+      .get('/api/v2/property')
       .set('Authorization', `Bearer ${agentToken}1`)
       .end((err, res) => {
         res.should.have.status(403);
@@ -175,7 +175,7 @@ describe('/CHECK tokens and relevant middlewares', () => {
 
   it('GET NOTFOUND Property', (done) => {
     chai.request(app)
-      .get('/api/v1/property/9')
+      .get('/api/v2/property/9')
       .set('Authorization', `Bearer ${agentToken}`)
       .end((err, res) => {
         res.should.have.status(404);
@@ -185,7 +185,7 @@ describe('/CHECK tokens and relevant middlewares', () => {
   });
   it('QUERY PARAMS validate id', (done) => {
     chai.request(app)
-      .get('/api/v1/property/9-')
+      .get('/api/v2/property/9-')
       .set('Authorization', `Bearer ${agentToken}`)
       .end((err, res) => {
         res.should.have.status(400);
@@ -196,7 +196,7 @@ describe('/CHECK tokens and relevant middlewares', () => {
   });
   it('check user is agent', (done) => {
     chai.request(app)
-      .patch('/api/v1/property/1/sold')
+      .patch('/api/v2/property/1/sold')
       .set('Authorization', `Bearer ${userToken}`)
       .set('Accept', 'application/json')
       .end((err, res) => {
@@ -210,7 +210,7 @@ describe('/CHECK tokens and relevant middlewares', () => {
 describe('/VALIDATES all input fields', () => {
   it('VALIDATES signup required fields', (done) => {
     chai.request(app)
-      .post('/api/v1/users/auth/signup')
+      .post('/api/v2/users/auth/signup')
       .send(testdata[1])
       .end((err, res) => {
         res.should.have.status(400);
@@ -222,7 +222,7 @@ describe('/VALIDATES all input fields', () => {
   });
   it('VALIDATES property input', (done) => {
     chai.request(app)
-      .post('/api/v1/property')
+      .post('/api/v2/property')
       .set('Authorization', `Bearer ${agentToken}`)
       .send(testAds[4])
       .end((err, res) => {
@@ -234,7 +234,7 @@ describe('/VALIDATES all input fields', () => {
   });
   it('view specific Invalid property', (done) => {
     chai.request(app)
-      .get('/api/v1/property?type=bedrooms')
+      .get('/api/v2/property?type=bedrooms')
       .set('Authorization', `Bearer ${userToken}`)
       .end((err, res) => {
         res.should.have.status(400);
@@ -244,7 +244,7 @@ describe('/VALIDATES all input fields', () => {
   });
   it('view specific property Not found', (done) => {
     chai.request(app)
-      .get('/api/v1/property?type=1bedrooms')
+      .get('/api/v2/property?type=1bedrooms')
       .set('Authorization', `Bearer ${userToken}`)
       .end((err, res) => {
         res.should.have.status(404);
@@ -254,7 +254,7 @@ describe('/VALIDATES all input fields', () => {
   });
   it('agent query available and sold property', (done) => {
     chai.request(app)
-      .get('/api/v1/property?type=3bedrooms')
+      .get('/api/v2/property?type=3bedrooms')
       .set('Authorization', `Bearer ${agentToken}`)
       .end((err, res) => {
         res.should.have.status(200);
@@ -265,7 +265,7 @@ describe('/VALIDATES all input fields', () => {
   });
   it('DELETE a Property', (done) => {
     chai.request(app)
-      .delete('/api/v1/property/1')
+      .delete('/api/v2/property/1')
       .set('Authorization', `Bearer ${agentToken}`)
       .end((err, res) => {
         res.should.have.status(200);
