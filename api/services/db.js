@@ -43,13 +43,17 @@ const flags = `CREATE TABLE IF NOT EXISTS
 
     client.connect()
 
-    export function dropTables(){
+    if(process.env.NODE_ENV === 'test'){
         client.query('DROP TABLE IF EXISTS users');
         client.query('DROP TABLE IF EXISTS property');
+        client.query(users)
+        client.query(property)
+        console.log(process.env.NODE_ENV)
+    }else{
+        // client.query(users) 
+        // client.query(property)
+        console.log('hhhhhhhhhhh', process.env.NODE_ENV)
     }
     
-   client.query(users)
-   client.query(property)
     
 export default client;
-require('make-runnable');
