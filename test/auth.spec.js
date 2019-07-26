@@ -125,15 +125,4 @@ describe('/POST/signup routes', () => {
             done();
           });
       });
-      it('internal server error', (done) => {
-        chai.request(app)
-          .patch('/api/v1/users/auth/signup')
-          .end((err, res) => {
-            res.should.have.status(500);
-            res.body.should.be.a('object');
-            res.body.should.have.property('status').eql(500);
-            res.body.should.have.property('error').eql('Ooops this method is not allowed ');
-            done();
-          });
-      });
   });
