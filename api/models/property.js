@@ -9,6 +9,7 @@ class Property {
     this.type = type;
     this.imageUrl = imageUrl;
   }
+  
   addProperty(){
       const query = 'INSERT INTO property(owner, price, address, city, state, type, imageUrl) VALUES($1,$2,$3,$4,$5,$6,$7) RETURNING *';
       const values = [this.owner, this.price, this.address, this.city, this.state, this.type, this.imageUrl];

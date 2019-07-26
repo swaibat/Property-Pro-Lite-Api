@@ -26,9 +26,7 @@ class User {
   static queryTypeOfProperty(type, isagent) {
     const query = isagent
       ? 'SELECT * FROM property WHERE type=$1 '
-      : `SELECT * FROM property
-    WHERE type=$1 and status='available' `;
-
+      : `SELECT * FROM property WHERE type=$1 and status='available' `;
     const value = [type];
     return client.query(query, value);
   }
@@ -36,9 +34,8 @@ class User {
 
   static allProperty(isagent) {
     const query = isagent
-      ? 'SELECT * FROM property '
-      : `SELECT * FROM property
-    WHERE status='available' `;
+      ? 'SELECT * FROM property'
+      : `SELECT * FROM property WHERE status='available' `;
     return client.query(query);
   }
 

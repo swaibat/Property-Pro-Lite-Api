@@ -21,11 +21,7 @@ class authMiddleware {
     });
     const data = Joi.validate(req.body, authSchema);
     if (typeof req.body.isAgent !== 'boolean') return errHandle(400, 'isAgent should be a boolean', res)
-    if (data.error) {
-      const resFomart = data.error.details[0].message.replace('"', '').split('"');
-      const gotElem = resFomart[0];
-      return errHandle(400, `${gotElem} field  is invalid `, res);
-    }
+    if (data.error) return errHandle(400, `${data.error.details[0].message.replace('"', '').split('"')[0]} field  is invalid `, res);
     next();
   }
 
@@ -43,10 +39,7 @@ class authMiddleware {
   // check if real users trying access
   static ensureUserToken(req, res, next) {
     jwt.verify(res.locals.token, process.env.appSecreteKey, (err, user) => {
-      if (err){
-        let newMsg = err.message.replace("jwt", "Token");
-        if (newMsg) return errHandle(403, err.message, res);;
-      } 
+      if (err) return errHandle(403, err.message.replace("jwt", "Token"), res);;
       const dbUser = User.getUserByEmail(user.email);
       dbUser.then((u) => {
         res.locals.user = u.rows[0];
