@@ -1,17 +1,8 @@
-import express from 'express';
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import { testdata, testAds } from '../apiV2/data/data';
-import userRoutes from '../apiV2/routes/auth';
-import propertyRoutes from '../apiV2/routes/property';
-import client from '../apiV2/services/db';
+import app from "../index";
 
-
-const app = express();
-app.use(express.json());
-
-app.use('/api/v1/users', userRoutes);
-app.use('/api/v1/property', propertyRoutes);
 const should = chai.should();
 let agentToken = '';
 let userToken = '';
@@ -19,90 +10,31 @@ let agentTwo = '';
 
 chai.use(chaiHttp);
 
-describe('/POST/signup routes', () => {
-  it('CREATES a new User', (done) => {
+describe('routes', () => {
+  it('User', (done) => {
     chai.request(app)
-      .post('/api/v1/users/auth/signup')
+      .post('/api/v1/users/auth/signin')
       .send(testdata[0])
       .end((err, res) => {
-        res.should.have.status(201);
-        res.body.should.be.a('object');
-        res.body.should.have.property('status').eql(201);
         userToken = res.body.data.token;
         done();
       });
   });
-  it('CREATES a new Agent', (done) => {
+  it('Agent', (done) => {
     chai.request(app)
-      .post('/api/v1/users/auth/signup')
+      .post('/api/v1/users/auth/signin')
       .send(testdata[5])
       .end((err, res) => {
-        res.should.have.status(201);
-        res.body.should.be.a('object');
-        res.body.should.have.property('status').eql(201);
         agentToken = res.body.data.token;
         done();
       });
   });
-  it('CREATES a new Agent two', (done) => {
+  it('Agent two', (done) => {
     chai.request(app)
-      .post('/api/v1/users/auth/signup')
+      .post('/api/v1/users/auth/signin')
       .send(testdata[11])
       .end((err, res) => {
-        res.should.have.status(201);
-        res.body.should.be.a('object');
-        res.body.should.have.property('status').eql(201);
         agentTwo = res.body.data.token;
-        done();
-      });
-  });
-  it('CHECKS if User already Exists', (done) => {
-    chai.request(app)
-      .post('/api/v1/users/auth/signup')
-      .send(testdata[5])
-      .end((err, res) => {
-        res.should.have.status(409);
-        res.body.should.be.a('object');
-        res.body.should.have.property('status').eql(409);
-        done();
-      });
-  });
-});
-
-describe('/POST/signin routes', () => {
-  it('ENABLE User login', (done) => {
-    chai.request(app)
-      .post('/api/v1/users/auth/signin')
-      .send(testdata[5])
-      .end((err, res) => {
-        res.should.have.status(200);
-        res.body.should.be.a('object');
-        res.body.data.should.have.property('token');
-        res.body.should.have.property('message').eql('signed in successfully');
-        done();
-      });
-  });
-  it('CHECK if User provided details are wrong', (done) => {
-    chai.request(app)
-      .post('/api/v1/users/auth/signin')
-      .send(testdata[4])
-      .end((err, res) => {
-        res.should.have.status(404);
-        res.body.should.be.a('object');
-        res.body.should.have.property('status').eql(404);
-        res.body.should.have.property('message').eql('user doesnt exist please signup');
-        done();
-      });
-  });
-  it('CHECK if User doesnt Exists', (done) => {
-    chai.request(app)
-      .post('/api/v1/users/auth/signin')
-      .send(testdata[101])
-      .end((err, res) => {
-        res.should.have.status(404);
-        res.body.should.be.a('object');
-        res.body.should.have.property('status').eql(404);
-        // res.body.should.have.property('message').eql('user doesnt exist please signup');
         done();
       });
   });
@@ -198,6 +130,15 @@ describe('ALL AGENT strict routes', () => {
       });
   });
   it('VIEW all Property', (done) => {
+    chai.request(app)
+      .get('/api/v1/property')
+      .set('Authorization', `Bearer ${userToken}`)
+      .end((err, res) => {
+        res.should.have.status(404);
+        done();
+      });
+  });
+  it('VIEW all Propertys agent', (done) => {
     chai.request(app)
       .get('/api/v1/property')
       .set('Authorization', `Bearer ${agentToken}`)
@@ -308,6 +249,17 @@ describe('/VALIDATES all input fields', () => {
       .end((err, res) => {
         res.should.have.status(404);
         res.body.should.have.property('error').eql('Ooop not found');
+        done();
+      });
+  });
+  it('agent query available and sold property', (done) => {
+    chai.request(app)
+      .get('/api/v1/property?type=3bedrooms')
+      .set('Authorization', `Bearer ${agentToken}`)
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.should.be.a('object');
+        res.body.data.should.be.a('array');
         done();
       });
   });

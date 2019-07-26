@@ -1,11 +1,8 @@
-/* eslint-disable linebreak-style */
-// admin123 password
-
 export const testdata = [
   {
     firstName: 'vella',
     lastName: 'vella',
-    email: `${Math.random().toString(35).slice(2)}@gmail.com`,
+    email: `vella@gmail.com`,
     address: 'kampala',
     phoneNumber: '07753225633',
     password: 'vella',
@@ -84,6 +81,14 @@ export const testdata = [
     password: 'agenttest',
     isAgent: true,
   },
+  {
+    email: 'vella@gmail.com',
+    password: 'amaar',
+  },
+  {
+    lastName: "swaib",
+    isAgent: false
+},
 ];
 
 export const testAds = [
