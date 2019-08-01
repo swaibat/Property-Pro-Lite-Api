@@ -7,20 +7,20 @@ import '@babel/polyfill';
 dotenv.config();
 
 class UserController {
-  signUp(req, res) {
+ async signUp(req, res) {
     const {
       firstName, lastName, email, address, phoneNumber, isAgent,
     } = req.body;
     const hashPassword = bcrypt.hashSync(req.body.password, 10);
     const userObj = new User(firstName, lastName, email, address, phoneNumber, hashPassword, isAgent);
-    userObj.createUser();
+    const user = await userObj.createUser();
     const { token } = res.locals;
-    return resHandle(201, 'signed up successfully', { token }, res);
+    return resHandle(201, 'signed up successfully', { isAgent:user.rows[0].isagent, token}, res);
   }
 
   signIn(req, res) {
     const { token } = res.locals;
-    return resHandle(200, 'signed in successfully', { token }, res);
+    return resHandle(200, 'signed in successfully', { isAgent:res.locals.isAgent, token }, res);
   }
 }
 

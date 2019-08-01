@@ -38,7 +38,7 @@ class adsMiddleware {
 
   // find if atall that agent owners the advert he wants to do operations on
   static AgentAndOwner(req, res, next) {
-    const owner = Property.getPropertyByOwner(res.locals.user.id);
+    const owner = Property.getPropertyByOwner(res.locals.user.email);
     owner.then((e) => {
       if (!e.rows[0]) return errHandle(403, 'Your do not own this property', res);
       next();
@@ -46,9 +46,9 @@ class adsMiddleware {
   }
 
   static async checkIfAdExist(req, res, next) {
-    const ownerId = res.locals.user.id;
+    const ownerEmail = res.locals.user.email;
     const { price, address, type } = req.body;
-    const newProperty = await Property.checkIfPropertyExist(ownerId, price, address, type);
+    const newProperty = await Property.checkIfPropertyExist(ownerEmail, price, address, type);
        if (newProperty.rows[0]) return errHandle(409, 'You can not post this propety again', res);
        next();
   }
@@ -56,8 +56,8 @@ class adsMiddleware {
   static queryType(req, res, next) {
     if (typeof req.query.type !== 'undefined') {
       const property = User.queryTypeOfProperty(req.query.type, res.locals.user.isagent);
-      const matchType = req.query.type.match(/^(1bedrooms|3bedrooms|5bedrooms|miniFlat|others)$/);
-      if (!matchType) return errHandle(400, 'We only have these types 1bedrooms, 3bedrooms, 5bedrooms, miniFlat ,others', res);
+      const matchType = req.query.type.match(/^(singlerooms|3bedrooms|5bedrooms|miniFlat|others)$/);
+      if (!matchType) return errHandle(400, 'We only have these types singlerooms, 3bedrooms, 5bedrooms, miniFlat ,others', res);
       return property.then(e => resHandle(200, 'operation successfull', e.rows, res));
     }
     next();

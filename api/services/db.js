@@ -23,15 +23,17 @@ const property = `CREATE TABLE IF NOT EXISTS
     property(
         id SERIAL PRIMARY KEY,
         createdOn timestamp without time zone DEFAULT now() NOT NULL,
-        owner INT NOT NULL,
         price FLOAT NOT NULL,
         address VARCHAR (150)  NOT NULL,
         city VARCHAR (100)  NOT NULL,
         state VARCHAR (100)  NOT NULL,
         type VARCHAR (50)  NOT NULL,
+        ownerEmail VARCHAR (50) NOT NULL,
+        ownerPhonenumber VARCHAR (50) NOT NULL,
         imageUrl VARCHAR (500)  NOT NULL,
         status VARCHAR (50) DEFAULT 'available' NOT NULL
     )`;
+
 const flags = `CREATE TABLE IF NOT EXISTS
     flags(
         id SERIAL PRIMARY KEY,
@@ -48,12 +50,10 @@ const flags = `CREATE TABLE IF NOT EXISTS
         client.query('DROP TABLE IF EXISTS property');
         client.query(users)
         client.query(property)
-        console.log(process.env.NODE_ENV)
     }else{
-        // client.query(users) 
-        // client.query(property)
-        console.log('hhhhhhhhhhh', process.env.NODE_ENV)
+        client.query(users) 
+        client.query(property)
     }
     
-    
+
 export default client;

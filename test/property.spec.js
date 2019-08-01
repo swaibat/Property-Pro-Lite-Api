@@ -238,13 +238,13 @@ describe('/VALIDATES all input fields', () => {
       .set('Authorization', `Bearer ${userToken}`)
       .end((err, res) => {
         res.should.have.status(400);
-        res.body.should.have.property('message').eql('We only have these types 1bedrooms, 3bedrooms, 5bedrooms, miniFlat ,others');
+        res.body.should.have.property('message').eql('We only have these types singlerooms, 3bedrooms, 5bedrooms, miniFlat ,others');
         done();
       });
   });
   it('view specific property Not found', (done) => {
     chai.request(app)
-      .get('/api/v2/property?type=1bedrooms')
+      .get('/api/v2/property?type=miniFlat')
       .set('Authorization', `Bearer ${userToken}`)
       .end((err, res) => {
         res.should.have.status(404);
