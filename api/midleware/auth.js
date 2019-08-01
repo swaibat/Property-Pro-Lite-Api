@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { User } from '../models/users';
 import errHandle from '../helpers/errors';
+import store from 'store';
 
 dotenv.config();
 
@@ -27,8 +28,10 @@ class authMiddleware {
 
   // verify user token
   static verifyToken(req, res, next) {
+    let keys = store.get('token')
     const bearerHeader = req.headers.authorization;
-    if (typeof bearerHeader === 'undefined') return errHandle(403, 'provide a token to get our services', res);
+    if (typeof bearerHeader === 'undefined' || typeof keys === 'undefined') return errHandle(403, 'provide a token to get our services', res);
+    res.locals.token = keys;
     const bearer = bearerHeader.split(' ');
     // get token from array
     const bearerToken = bearer[1];
@@ -52,6 +55,7 @@ class authMiddleware {
   static createUserToken(req, res, next) {
     const { email } = req.body;
     res.locals.token = jwt.sign({ email }, process.env.appSecreteKey, { expiresIn: '24hr' });
+    store.set('token', res.locals.token)
     return next();
   }
 
@@ -72,6 +76,7 @@ class authMiddleware {
       if (!u.rows[0]) return errHandle(404, 'user doesnt exist please signup', res);
       const passCompare = bcrypt.compareSync(password, u.rows[0].password);
       if (!passCompare) return errHandle(400, 'wrong username or password', res);
+      res.locals.isAgent = u.rows[0].isagent
       return next();
     });
   }

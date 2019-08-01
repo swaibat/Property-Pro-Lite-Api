@@ -4,9 +4,11 @@ import swaggerUI from 'swagger-ui-express';
 import userRoutes from './api/routes/auth';
 import propertyRoutes from './api/routes/property';
 import swaggerDoc from './swagger.json';
+import cors  from 'cors';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+app.use(cors())
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -26,6 +28,6 @@ app.use((error, req, res, next) => {
   next();
 });
 
-app.listen(PORT, () => console.log(`listening on port ${PORT} and ${process.env.NODE_ENV}...`));
+app.listen(PORT, () => console.log(`listening on port ${PORT}...`));
 
 export default app;

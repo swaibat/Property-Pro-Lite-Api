@@ -7,8 +7,8 @@ class PropertyController {
     const {
       price, address, city, state, type, imageUrl,
     } = req.body;
-    const { id } = res.locals.user;
-    const adObj = new Property(id, price, address, city, state, type, imageUrl);
+    const { email,phonenumber } = res.locals.user;
+    const adObj = new Property(price, address, city, state, type, imageUrl,email,phonenumber);
     const property = adObj.addProperty(adObj);
     property.then(e => resHandle(201, 'Property created', e.rows[0], res));
   }
