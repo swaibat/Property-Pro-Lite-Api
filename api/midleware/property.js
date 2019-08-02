@@ -1,6 +1,7 @@
 import Joi from '@hapi/joi';
 import Property from '../models/property';
-import { User }from '../models/users';
+import Flag from '../models/flags';
+import { User,Agent }from '../models/users';
 import resHandle from '../helpers/response';
 import errHandle from '../helpers/errors';
 
@@ -60,6 +61,18 @@ class adsMiddleware {
       if (!matchType) return errHandle(400, 'We only have these types singlerooms, 3bedrooms, 5bedrooms, miniFlat ,others', res);
       return property.then(e => resHandle(200, 'operation successfull', e.rows, res));
     }
+    next();
+  }
+
+  static async checkIfFlagged(req, res, next) {
+    const newProperty = await Flag.checkFlagged(res.locals.property.id);
+    if (newProperty.rows[0]) return errHandle(409, 'property already flagged', res);
+    next();
+  }
+
+  static async checkIfSold(req, res, next) {
+    const newProperty = await Agent.checkSold(res.locals.property.id);
+    if (newProperty.rows[0]) return errHandle(409, 'property already marked sold', res);
     next();
   }
 

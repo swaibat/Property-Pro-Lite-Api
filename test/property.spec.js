@@ -1,6 +1,6 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
-import { testdata, testAds } from '../api/data/data';
+import { testdata, testAds, testFlag } from '../api/data/data';
 import app from "../index";
 
 const should = chai.should();
@@ -99,7 +99,6 @@ describe('ALL AGENT strict routes', () => {
     chai.request(app)
       .patch('/api/v2/property/1/sold')
       .set('Authorization', `Bearer ${agentToken}`)
-      .send(testAds[2])
       .end((err, res) => {
         res.should.have.status(200);
         res.body.should.be.a('object');
@@ -109,22 +108,24 @@ describe('ALL AGENT strict routes', () => {
         done();
       });
   });
+  it('PATCH a Property exist', (done) => {
+    chai.request(app)
+      .patch('/api/v2/property/1/sold')
+      .set('Authorization', `Bearer ${agentToken}`)
+      .end((err, res) => {
+        res.should.have.status(409);
+        res.body.should.be.a('object');
+        res.body.should.have.property('message').eql('property already marked sold');
+        res.body.should.have.property('status').eql(409);
+        done();
+      });
+  });
   it('GET a specific Property', (done) => {
     chai.request(app)
       .get('/api/v2/property/1')
       .set('Authorization', `Bearer ${agentToken}`)
       .end((err, res) => {
         res.should.have.status(200);
-        res.body.should.be.a('object');
-        done();
-      });
-  });
-  it('CHECK agent ownership', (done) => {
-    chai.request(app)
-      .patch('/api/v2/property/1/sold')
-      .set('Authorization', `Bearer ${agentTwo}`)
-      .end((err, res) => {
-        res.should.have.status(403);
         res.body.should.be.a('object');
         done();
       });
@@ -207,6 +208,37 @@ describe('/CHECK tokens and relevant middlewares', () => {
   });
 });
 
+describe('POST/flag', () => {
+  it('CREATES a new Flag', (done) => {
+    chai.request(app)
+      .post('/api/v2/flag/1')
+      .set('Authorization', `Bearer ${agentToken}`)
+      .send(testFlag[0])
+      .end((err, res) => {
+        res.should.have.status(201);
+        res.body.should.be.a('object');
+        res.body.data.should.be.a('object');
+        res.body.data.should.have.property('reason');
+        res.body.data.should.have.property('description');
+        res.body.should.have.property('status').eql(201);
+        done();
+      });
+  });
+  it('CHECK if exists', (done) => {
+    chai.request(app)
+      .post('/api/v2/flag/1')
+      .set('Authorization', `Bearer ${agentToken}`)
+      .send(testFlag[0])
+      .end((err, res) => {
+        res.should.have.status(409);
+        res.body.should.be.a('object');
+        res.body.should.have.property('message').eql('property already flagged');
+        res.body.should.have.property('status').eql(409);
+        done();
+      });
+  });
+});
+
 describe('/VALIDATES all input fields', () => {
   it('VALIDATES signup required fields', (done) => {
     chai.request(app)
@@ -276,3 +308,6 @@ describe('/VALIDATES all input fields', () => {
       });
   });
 });
+
+
+

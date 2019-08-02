@@ -56,6 +56,12 @@ class Agent extends User {
     return client.query(query, value);
   }
 
+  static checkSold(id) {
+    const query = 'SELECT * FROM property WHERE status=$1 and id=$2 ';
+    const value = ['sold', id];
+    return client.query(query, value);
+  }
+
   static delProperty(id) {
     const query = 'DELETE FROM  property WHERE id=$1 RETURNING *';
     const value = [id];
