@@ -166,3 +166,10 @@ export const testAds = [
     status: 'available',
   },
 ];
+
+export const testFlag = [
+  {
+    reason: 'weird demand',
+    description: 'kampala',
+  }
+]

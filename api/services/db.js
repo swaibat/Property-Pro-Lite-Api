@@ -34,13 +34,13 @@ const property = `CREATE TABLE IF NOT EXISTS
         status VARCHAR (50) DEFAULT 'available' NOT NULL
     )`;
 
-const flags = `CREATE TABLE IF NOT EXISTS
+    const flags = `CREATE TABLE IF NOT EXISTS
     flags(
         id SERIAL PRIMARY KEY,
-        propertyId INT NOT NULL,
+        property_id INT NOT NULL,
         reason VARCHAR (100)  NOT NULL,
         description VARCHAR (255)  NOT NULL,
-        createdOn timestamp without time zone DEFAULT now() NOT NULL
+        created_on timestamp without time zone DEFAULT now() NOT NULL
     )`;
 
     client.connect()
@@ -48,11 +48,14 @@ const flags = `CREATE TABLE IF NOT EXISTS
     if(process.env.NODE_ENV === 'test'){
         client.query('DROP TABLE IF EXISTS users');
         client.query('DROP TABLE IF EXISTS property');
+        client.query('DROP TABLE IF EXISTS flags');
         client.query(users)
         client.query(property)
+        client.query(flags)
     }else{
         client.query(users) 
         client.query(property)
+        client.query(flags)
     }
     
 
