@@ -3,8 +3,14 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import { methodError, serverError } from './api/midleware/errors';
 import apiRoutes from './api/routes/apiRoutes';
+import fileUpload from 'express-fileupload';
 
 const app = express();
+
+app.use(fileUpload({
+  useTempFiles : true,
+  tempFileDir : '/tmp/'
+}));
 
 app
   .use(cors())
