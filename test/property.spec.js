@@ -56,18 +56,6 @@ describe('ALL AGENT strict routes', () => {
         done();
       });
   });
-  it('CREATES a new Property validation', (done) => {
-    chai.request(app)
-      .post('/api/v2/property')
-      .set('Authorization', `Bearer ${agentToken}`)
-      .send(testAds[9])
-      .end((err, res) => {
-        res.should.have.status(400);
-        res.body.should.be.a('object');
-        res.body.should.have.property('status').eql(400);
-        done();
-      });
-  });
   it('CHECK if property exists', (done) => {
     chai.request(app)
       .post('/api/v2/property')
@@ -249,18 +237,6 @@ describe('/VALIDATES all input fields', () => {
         res.body.should.be.a('object');
         res.body.should.have.property('status').eql(400);
         res.body.should.have.property('message').eql('isAgent should be a boolean');
-        done();
-      });
-  });
-  it('VALIDATES property input', (done) => {
-    chai.request(app)
-      .post('/api/v2/property')
-      .set('Authorization', `Bearer ${agentToken}`)
-      .send(testAds[4])
-      .end((err, res) => {
-        res.should.have.status(400);
-        res.body.should.be.a('object');
-        res.body.should.have.property('message').eql('address field  is invalid ');
         done();
       });
   });

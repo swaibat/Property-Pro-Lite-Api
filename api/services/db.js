@@ -30,7 +30,7 @@ const property = `CREATE TABLE IF NOT EXISTS
         type VARCHAR (50)  NOT NULL,
         ownerEmail VARCHAR (50) NOT NULL,
         ownerPhonenumber VARCHAR (50) NOT NULL,
-        imageUrl VARCHAR (500)  NOT NULL,
+        imageUrl TEXT [],
         status VARCHAR (50) DEFAULT 'available' NOT NULL
     )`;
 

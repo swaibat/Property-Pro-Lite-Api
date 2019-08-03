@@ -1,29 +1,11 @@
-import Joi from '@hapi/joi';
 import Property from '../models/property';
 import Flag from '../models/flags';
 import { User,Agent }from '../models/users';
 import resHandle from '../helpers/response';
 import errHandle from '../helpers/errors';
+import cloudinary from '../config/config';
 
 class adsMiddleware {
-  static adsValidator(req, res, next) {
-    const schema = Joi.object().keys({
-      price: Joi.required(),
-      address: Joi.string().min(2).required(),
-      city: Joi.string().min(2).required(),
-      state: Joi.string().min(2).required(),
-      type: Joi.string().regex(/^(1bedrooms|3bedrooms|5bedrooms|miniFlat|others)$/).required(),
-      imageUrl: Joi.string().regex(/([a-z\-_0-9\/\:\.]*\.(jpg|jpeg|png|webp|gif))/).required(),
-    });
-    const data = Joi.validate(req.body, schema);
-    if (typeof req.body.price !== 'number' ) return errHandle(400, 'price should be a number not less than 1', res)
-    if (data.error) {
-      const resFomart = data.error.details[0].message.replace('"', '').split('"');
-      const gotElem = resFomart[0];
-      return errHandle(400, `${gotElem} field  is invalid `, res);
-    }
-    next();
-  }
 
   static getPropertyById(req, res, next) {
     const { Id } = req.params;
@@ -39,20 +21,17 @@ class adsMiddleware {
 
   // find if atall that agent owners the advert he wants to do operations on
   static AgentAndOwner(req, res, next) {
-    const owner = Property.getPropertyByOwner(res.locals.user.email);
-    owner.then((e) => {
-      if (!e.rows[0]) return errHandle(403, 'Your do not own this property', res);
-      next();
-    });
+    Property.getPropertyByOwner(res.locals.user.email)
+    .then(e => !e.rows[0] ? errHandle(403, 'Your do not own this property', res ):next())
   }
 
-  static async checkIfAdExist(req, res, next) {
-    const ownerEmail = res.locals.user.email;
+
+  static checkIfAdExist(req, res, next) {
     const { price, address, type } = req.body;
-    const newProperty = await Property.checkIfPropertyExist(ownerEmail, price, address, type);
-       if (newProperty.rows[0]) return errHandle(409, 'You can not post this propety again', res);
-       next();
+    Property.checkIfPropertyExist(res.locals.user.email, price, address, type)
+    .then(e => e.rows[0] ? errHandle(409, 'You can not post this propety again', res ):next())
   }
+
 
   static queryType(req, res, next) {
     if (typeof req.query.type !== 'undefined') {
@@ -64,17 +43,36 @@ class adsMiddleware {
     next();
   }
 
-  static async checkIfFlagged(req, res, next) {
-    const newProperty = await Flag.checkFlagged(res.locals.property.id);
-    if (newProperty.rows[0]) return errHandle(409, 'property already flagged', res);
-    next();
+  static checkIfFlagged(req, res, next) {
+    Flag.checkFlagged(res.locals.property.id)
+    .then(e => e.rows[0] ? errHandle(409, 'property already flagged', res ):next())
   }
 
-  static async checkIfSold(req, res, next) {
-    const newProperty = await Agent.checkSold(res.locals.property.id);
-    if (newProperty.rows[0]) return errHandle(409, 'property already marked sold', res);
-    next();
+  static checkIfSold(req, res, next) {
+    Agent.checkSold(res.locals.property.id)
+    .then(e => e.rows[0] ? errHandle(409, 'property already marked sold', res ):next())
   }
+
+  static uploads(req, res, next) {
+  if(process.env.NODE_ENV === 'test'){
+    res.locals.imgArr = [req.body.imageUrl]
+    return next()
+  }
+  const  files = req.files.imageUrl.map(e => e.tempFilePath)
+  let upload_res = files.map(file => new Promise((resolve, reject) => {
+      cloudinary.v2.uploader.upload(file, (error, result) => {
+          if(error) reject(error)
+          else resolve(result.url)
+      })
+  })
+  )
+  Promise.all(upload_res)
+    .catch(error => errHandle(400, error.message, res ))
+    .then(result =>{
+      res.locals.imgArr = result
+      next()
+    })
+}
 
 }
 

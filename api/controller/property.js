@@ -5,10 +5,10 @@ import resHandle from '../helpers/response';
 class PropertyController {
   postProperty(req, res) {
     const {
-      price, address, city, state, type, imageUrl,
+      price, address, city, state, type,
     } = req.body;
     const { email,phonenumber } = res.locals.user;
-    const adObj = new Property(price, address, city, state, type, imageUrl,email,phonenumber);
+    const adObj = new Property(price, address, city, state, type, res.locals.imgArr,email,phonenumber);
     const property = adObj.addProperty(adObj);
     property.then(e => resHandle(201, 'Property created', e.rows[0], res));
   }

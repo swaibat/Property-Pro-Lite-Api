@@ -14,7 +14,7 @@ router
   .post('/users/auth/signup', Auth.inputValidator, Auth.checkUserExists, Auth.createUserToken, user.signUp)
   .post('/users/auth/signin', Auth.createUserToken, Auth.checkNoUser, user.signIn)
 // property routes
-  .post('/property', Auth.verifyToken, Auth.ensureUserToken, Ads.adsValidator, Auth.agentCheck, Ads.checkIfAdExist, property.postProperty)
+  .post('/property', Auth.verifyToken, Auth.ensureUserToken, Auth.agentCheck, Ads.checkIfAdExist, Ads.uploads, property.postProperty)
   .patch('/property/:Id', Auth.verifyToken, Auth.ensureUserToken, Ads.getPropertyById, Ads.AgentAndOwner, property.updateProperty)
   .patch('/property/:Id/sold', Auth.verifyToken, Auth.ensureUserToken, Auth.agentCheck, Ads.getPropertyById, Ads.checkIfSold, Ads.AgentAndOwner, property.markSold)
   .delete('/property/:Id', Auth.verifyToken, Auth.ensureUserToken, Auth.agentCheck, Ads.getPropertyById, Ads.AgentAndOwner, property.deleteProperty)
