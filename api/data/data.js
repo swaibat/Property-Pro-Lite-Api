@@ -98,7 +98,6 @@ export const testAds = [
     state: 'central',
     address: 'kampala',
     type: '3bedrooms',
-    imageUrl: 'images/hose1.jpg'
   },
   {
     price: 200,
@@ -106,7 +105,7 @@ export const testAds = [
     state: 'western',
     address: 'kampala',
     type: '3bedrooms',
-    imageUrl: 'images/hose1.jpg',
+    imageUrl: 'api/data/1.png',
     status: 'sold',
   },
   {
@@ -135,7 +134,7 @@ export const testAds = [
     state: 'cent ral',
     address: 'kampala',
     type: '3bedrooms',
-    imageUrl: 'images/hose1.jpg',
+    imageUrl: 'api/data/1.png',
     status: 'available',
   },
   {
@@ -144,7 +143,7 @@ export const testAds = [
     state: 'central',
     address: 'kampala',
     type: '3bedrooms',
-    imageUrl: 'images/hose1.mp4',
+    imageUrl: 'api/data/1.mp4',
     status: 'available',
   },
   {
@@ -153,7 +152,7 @@ export const testAds = [
     state: 'central',
     address: 'kampala',
     type: '3bedrooms',
-    imageUrl: 'images/hose1.mp4',
+    imageUrl: 'api/data/1.mp4',
     status: 'available',
   },
   {
@@ -162,7 +161,7 @@ export const testAds = [
     state: 'central',
     address: 'kampala',
     type: '3bedrooms',
-    imageUrl: 'images/hose1.mp4',
+    imageUrl: 'api/data/1.mp4',
     status: 'available',
   },
 ];

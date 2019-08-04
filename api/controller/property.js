@@ -15,13 +15,13 @@ class PropertyController {
 
   updateProperty(req, res) {
     const { address, city, state } = req.body;
-    const property = Agent.updateProperty(address, state, city, req.params.Id);
-    property.then(e => resHandle(200, 'Property Updated', e.rows[0], res));
+    Agent.updateProperty(address, state, city, req.params.Id)
+    .then(e => resHandle(200, 'Property Updated', e.rows[0], res));
   }
 
   markSold(req, res) {
-    const property = Agent.markPropertySold(req.params.Id);
-    property.then(e => resHandle(200, 'property marked as sold', e.rows[0], res));
+    Agent.markPropertySold(req.params.Id)
+    .then(e => resHandle(200, 'property marked as sold', e.rows[0], res));
   }
 
   deleteProperty(req, res) {
@@ -30,8 +30,8 @@ class PropertyController {
   }
 
   getAllProperty(req, res) {
-    const property = User.allProperty(res.locals.user.isagent);
-    property.then(e => resHandle(200, 'all available property', e.rows, res));
+    User.allProperty(res.locals.user.isagent)
+    .then(e => resHandle(200, 'all available property', e.rows, res));
   }
 
   singleProperty(req, res) {
