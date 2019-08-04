@@ -28,15 +28,19 @@ class authMiddleware {
 
   // verify user token
   static verifyToken(req, res, next) {
-    let keys = store.get('token')
+    const keys = store.get('token');
     const bearerHeader = req.headers.authorization;
-    if (typeof bearerHeader === 'undefined' || typeof keys === 'undefined') return errHandle(403, 'provide a token to get our services', res);
-    res.locals.token = keys;
-    const bearer = bearerHeader.split(' ');
-    // get token from array
-    const bearerToken = bearer[1];
-    res.locals.token = bearerToken;
-    next();
+    if (!bearerHeader && !keys) return errHandle(403, 'provide a token to get our services', res);
+    if (bearerHeader) {
+      const bearer = bearerHeader.split(' ');
+      const bearerToken = bearer[1];
+      res.locals.token = bearerToken;
+      next();
+    }
+    if (keys) {
+      res.locals.token = keys;
+      next();
+    }
   }
 
   // check if real users trying access

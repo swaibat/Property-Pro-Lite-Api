@@ -54,11 +54,12 @@ class adsMiddleware {
   }
 
   static uploads(req, res, next) {
-  if(process.env.NODE_ENV === 'test'){
-    res.locals.imgArr = [req.body.imageUrl]
-    return next()
+  if(req.headers['Content-Type'] === 'application/json'){
+      res.locals.imgArr = [req.body.imageUrl]
+      return next()
   }
-  const  files = req.files.imageUrl.map(e => e.tempFilePath)
+  const imgs = req.files.imageUrl.length ? req.files.imageUrl :[req.files.imageUrl];
+  const  files = imgs.map(e => e.tempFilePath)
   let upload_res = files.map(file => new Promise((resolve, reject) => {
       cloudinary.v2.uploader.upload(file, (error, result) => {
           if(error) reject(error)
