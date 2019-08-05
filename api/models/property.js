@@ -10,19 +10,7 @@ class Property {
     this.email = email;
     this.phoneNumber = phoneNumber;
   }
-  
-  addProperty(){
-      const query = 'INSERT INTO property(price, address, city, state, type, imageUrl,ownerEmail,ownerPhonenumber) VALUES($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *';
-      const values = [this.price, this.address, this.city, this.state, this.type, this.imageUrl,this.email,this.phoneNumber];
-      return client.query(query, values);
-  }
 
-  static getPropertyById(id){
-    const IdQuery = 'SELECT * FROM property WHERE id=$1'
-    const value = [id];
-    return client.query(IdQuery,value )
-  }
-  
   static getPropertyByOwner(email){
     const IdQuery = 'SELECT * FROM property WHERE owneremail=$1'
     const value = [email];

@@ -17,6 +17,13 @@ class User {
     return client.query(userQuery, values);
   }
 
+  static getPropertyById(id){
+    const IdQuery = 'SELECT * FROM property WHERE id=$1'
+    const value = [id];
+    return client.query(IdQuery,value )
+  }
+
+
   static getUserByEmail(email) {
     const query = 'SELECT * FROM users WHERE email=$1';
     const values = [email];
@@ -42,6 +49,12 @@ class User {
 }
 
 class Agent extends User {
+
+  static createProperty(ad){
+    const query = 'INSERT INTO property(price, address, city, state, type, imageUrl,ownerEmail,ownerPhonenumber) VALUES($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *';
+    const values = [ad.price, ad.address, ad.city, ad.state, ad.type, ad.imageUrl, ad.email, ad.phoneNumber];
+    return client.query(query, values);
+  }
 
   static updateProperty(address, state, city, id) {
     const query = 'UPDATE property SET address=$1,city=$2,state=$3 WHERE id=$4 RETURNING *';

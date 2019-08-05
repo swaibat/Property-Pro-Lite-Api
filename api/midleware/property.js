@@ -11,12 +11,12 @@ class adsMiddleware {
     const { Id } = req.params;
     const validparam = Id.match(/^[0-9]+$/);
     if(!validparam) return res.status(400).send({ status: 400, error: 'provide a valid number in parameters' })
-    const property = Property.getPropertyById(Id);
-    property.then((e) => {
+    User.getPropertyById(Id)
+      .then(e => {
       res.locals.property = e.rows[0];
       if (!res.locals.property) return errHandle(404, 'property with given id not Found', res);
       next();
-    });
+    })
   }
 
   // find if atall that agent owners the advert he wants to do operations on

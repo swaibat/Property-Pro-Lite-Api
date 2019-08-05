@@ -6,7 +6,7 @@ class PropertyController {
   static postProperty(req, res) {
     const { price, address, city, state, type } = req.body;
     const { email, phonenumber } = res.locals.user;
-    new Property(price, address, city, state, type, res.locals.imgArr, email, phonenumber).addProperty()
+    Agent.createProperty(new Property(price, address, city, state, type, res.locals.imgArr, email, phonenumber))
       .then(e => resHandle(201, 'Property created', e.rows[0], res));
   }
 
