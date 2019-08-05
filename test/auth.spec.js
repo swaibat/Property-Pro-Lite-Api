@@ -8,6 +8,16 @@ const should = chai.should();
 chai.use(chaiHttp);
 
 describe('/POST/signup routes', () => {
+  it('CHECK if token is provided', (done) => {
+    chai.request(app)
+      .get('/api/v2/property')
+      .end((err, res) => {
+        res.should.have.status(403);
+        res.body.should.be.a('object');
+        res.body.should.have.property('message').eql('provide a token to get our services');
+        done();
+      });
+  });
     it('CREATES a new User', (done) => {
       chai.request(app)
         .post('/api/v2/users/auth/signup')

@@ -30,7 +30,7 @@ class authMiddleware {
   static verifyToken(req, res, next) {
     let keys = store.get('token')
     const bearerHeader = req.headers.authorization;
-    if (typeof bearerHeader === 'undefined' || typeof keys === 'undefined') return errHandle(403, 'provide a token to get our services', res);
+    if (typeof bearerHeader === 'undefined' && typeof keys === 'undefined') return errHandle(403, 'provide a token to get our services', res);
     res.locals.token = keys;
     const bearer = bearerHeader.split(' ');
     // get token from array

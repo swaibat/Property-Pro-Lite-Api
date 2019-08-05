@@ -141,16 +141,6 @@ describe('ALL AGENT strict routes', () => {
   });
 });
 describe('/CHECK tokens and relevant middlewares', () => {
-  it('CHECK if token is provided', (done) => {
-    chai.request(app)
-      .get('/api/v2/property')
-      .end((err, res) => {
-        res.should.have.status(403);
-        res.body.should.be.a('object');
-        res.body.should.have.property('message').eql('provide a token to get our services');
-        done();
-      });
-  });
   it('CHECK for ivalid token', (done) => {
     chai.request(app)
       .get('/api/v2/property')

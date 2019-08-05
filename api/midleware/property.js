@@ -54,11 +54,13 @@ class adsMiddleware {
   }
 
   static uploads(req, res, next) {
-  if(process.env.NODE_ENV === 'test'){
+  if(req.headers['content-type'] === 'application/json'){
     res.locals.imgArr = [req.body.imageUrl]
     return next()
   }
-  const  files = req.files.imageUrl.map(e => e.tempFilePath)
+
+  const imgs = req.files.imageUrl.length ? req.files.imageUrl : [req.files.imageUrl];
+  const  files = imgs.map(e => e.tempFilePath)
   let upload_res = files.map(file => new Promise((resolve, reject) => {
       cloudinary.v2.uploader.upload(file, (error, result) => {
           if(error) reject(error)
@@ -67,7 +69,7 @@ class adsMiddleware {
   })
   )
   Promise.all(upload_res)
-    .catch(error => errHandle(400, error.message, res ))
+    .catch(error => error.code === 'ENOTFOUND' ? errHandle(400,'No internet connection to remote storage', res ) : error)
     .then(result =>{
       res.locals.imgArr = result
       next()
