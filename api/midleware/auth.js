@@ -30,12 +30,8 @@ class authMiddleware {
   static verifyToken(req, res, next) {
     let keys = store.get('token')
     const bearerHeader = req.headers.authorization;
-    if (typeof bearerHeader === 'undefined' && typeof keys === 'undefined') return errHandle(403, 'provide a token to get our services', res);
-    res.locals.token = keys;
-    const bearer = bearerHeader.split(' ');
-    // get token from array
-    const bearerToken = bearer[1];
-    res.locals.token = bearerToken;
+    if (!bearerHeader && !keys ) return errHandle(403, 'provide a token to get our services', res);
+    res.locals.token = bearerHeader.split(' ')[1] || keys;
     next();
   }
 
@@ -43,26 +39,22 @@ class authMiddleware {
   static ensureUserToken(req, res, next) {
     jwt.verify(res.locals.token, process.env.appSecreteKey, (err, user) => {
       if (err) return errHandle(403, err.message.replace("jwt", "Token"), res);;
-      const dbUser = User.getUserByEmail(user.email);
-      dbUser.then((u) => {
-        res.locals.user = u.rows[0];
-        return next();
-      });
+      User.getUserByEmail(user.email)
+        .then(u => {res.locals.user = u.rows[0], next()});
     });
   }
 
   // function creates user token
   static createUserToken(req, res, next) {
-    const { email } = req.body;
-    res.locals.token = jwt.sign({ email }, process.env.appSecreteKey, { expiresIn: '24hr' });
+    res.locals.token = jwt.sign({ email:req.body.email }, process.env.appSecreteKey, { expiresIn: '24hr' });
     store.set('token', res.locals.token)
     return next();
   }
 
   // check if user already exists
   static checkUserExists(req, res, next) {
-    const user = User.getUserByEmail(req.body.email);
-    user.then(newUser =>{
+    User.getUserByEmail(req.body.email)
+      .then(newUser =>{
       if (newUser.rows[0]) return errHandle(409, 'user already exists', res);
       return next();
     })
@@ -71,21 +63,19 @@ class authMiddleware {
   // check if user already exists
   static checkNoUser(req, res, next) {
     const { email, password } = req.body;
-    const user = User.getUserByEmail(email);
-    user.then((u) => {
-      if (!u.rows[0]) return errHandle(404, 'user doesnt exist please signup', res);
-      const passCompare = bcrypt.compareSync(password, u.rows[0].password);
-      if (!passCompare) return errHandle(400, 'wrong username or password', res);
-      res.locals.isAgent = u.rows[0].isagent
-      return next();
-    });
+    User.getUserByEmail(email)
+      .then((u) => {
+        if (!u.rows[0]) return errHandle(404, 'user doesnt exist please signup', res);
+        const passCompare = bcrypt.compareSync(password, u.rows[0].password);
+        if (!passCompare) return errHandle(400, 'wrong username or password', res);
+        res.locals.isAgent = u.rows[0].isagent
+        return next();
+    })
   }
 
   // check if the user is an agent
   static agentCheck(req, res, next) {
-    
-    if (res.locals.user.isagent === false) return errHandle(403, 'Only agent can access this service', res);
-    next();
+    !res.locals.user.isagent ? errHandle(403, 'Only agent can access this service', res) : next();
   }
 }
 

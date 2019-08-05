@@ -11,8 +11,8 @@ class UserController {
     const { firstName, lastName, email, address, phoneNumber, isAgent } = req.body;
     const hashPassword = bcrypt.hashSync(req.body.password, 10);
     const { token } = res.locals;
-    const a = new User(firstName, lastName, email, address, phoneNumber, hashPassword, isAgent).createUser()
-    .then(e => resHandle(201, 'signed up successfully', { isAgent:e.rows[0].isagent, token}, res))
+    new User(firstName, lastName, email, address, phoneNumber, hashPassword, isAgent).createUser()
+      .then(e => resHandle(201, 'signed up successfully', { isAgent:e.rows[0].isagent, token}, res))
   }
 
   signIn(req, res) {
