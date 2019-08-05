@@ -16,11 +16,13 @@ class Property {
       const values = [this.price, this.address, this.city, this.state, this.type, this.imageUrl,this.email,this.phoneNumber];
       return client.query(query, values);
   }
+
   static getPropertyById(id){
     const IdQuery = 'SELECT * FROM property WHERE id=$1'
     const value = [id];
     return client.query(IdQuery,value )
   }
+  
   static getPropertyByOwner(email){
     const IdQuery = 'SELECT * FROM property WHERE owneremail=$1'
     const value = [email];

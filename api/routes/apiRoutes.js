@@ -1,14 +1,11 @@
 import express from 'express';
-import PropertyController from '../controller/property';
-import UserController from '../controller/users';
+import property from '../controller/property';
+import user from '../controller/users';
 import FlagController from '../controller/flags';
 import Ads from '../midleware/property';
 import Auth from '../midleware/auth';
 
 const router = express.Router();
-
-const property = new PropertyController();
-const user = new UserController();
 
 router
   .post('/users/auth/signup', Auth.inputValidator, Auth.checkUserExists, Auth.createUserToken, user.signUp)

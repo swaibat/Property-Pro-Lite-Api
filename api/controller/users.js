@@ -7,7 +7,7 @@ dotenv.config();
 
 
 class UserController {
- signUp(req, res) {
+  static signUp(req, res) {
     const { firstName, lastName, email, address, phoneNumber, isAgent } = req.body;
     const hashPassword = bcrypt.hashSync(req.body.password, 10);
     const { token } = res.locals;
@@ -15,7 +15,7 @@ class UserController {
       .then(e => resHandle(201, 'signed up successfully', { isAgent:e.rows[0].isagent, token}, res))
   }
 
-  signIn(req, res) {
+  static signIn(req, res) {
     const { token } = res.locals;
     return resHandle(200, 'signed in successfully', { isAgent:res.locals.isAgent, token }, res);
   }
