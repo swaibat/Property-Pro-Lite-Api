@@ -86,6 +86,30 @@ class Validate {
     return this;
   }
 
+  email() {
+    if (!this.val.match(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)){
+      this.error = `${this.obj} is invalid`
+      return this;
+    }
+    return this;
+  }
+
+  types() {
+    if (!this.val.match(/^(1bedrooms|3bedrooms|5bedrooms|miniFlat|others)$/)){
+      this.error = `${this.obj} is invalid`
+      return this;
+    }
+    return this;
+  }
+
+  images() {
+    if (!this.val.match(/([a-z\-_0-9\/\:\.]*\.(jpg|jpeg|png|webp|gif))/)){
+      this.error = `${this.obj} is invalid`
+      return this;
+    }
+    return this;
+  }
+
 }
 
 

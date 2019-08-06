@@ -8,10 +8,24 @@ import validate from '../helpers/validator'
 
 class adsMiddleware {
 
+  static validator(req, res, next) {
+    const { price, address, city, state, type } = req.body;
+    const valid = [
+      new validate(price, req.body).string().required().min(2).max(30).numeric(),
+      new validate(price, req.body).string().required().min(2).max(30).numeric(),
+      new validate(address, req.body).string().required().min(2),
+      new validate(city, req.body).string().required().min(2),
+      new validate(state, req.body).string().required().min(2).alphaNum(),
+      new validate(type, req.body).string().required().types()
+    ]
+    if(valid[0].error)return errHandle(valid[0].status, valid[0].error, res);
+    next()
+  }
+
   static getPropertyById(req, res, next) {
     const { Id } = req.params;
-    const validparam = new validate(Id).numeric();
-    if(!validparam) return errHandle(404, 'provide a valid number in parameters', res)
+    const validparam = Id.match(/^[0-9]+$/);
+    if(!validparam) return errHandle(400, 'provide a valid number in parameters', res)
     User.getPropertyById(Id)
       .then(e => {
       res.locals.property = e.rows[0];
