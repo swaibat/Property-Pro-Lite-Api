@@ -4,13 +4,14 @@ import { User,Agent }from '../models/users';
 import resHandle from '../helpers/response';
 import errHandle from '../helpers/errors';
 import cloudinary from '../config/config';
+import validate from '../helpers/validator'
 
 class adsMiddleware {
 
   static getPropertyById(req, res, next) {
     const { Id } = req.params;
-    const validparam = Id.match(/^[0-9]+$/);
-    if(!validparam) return res.status(400).send({ status: 400, error: 'provide a valid number in parameters' })
+    const validparam = new validate(Id).numeric();
+    if(!validparam) return errHandle(404, 'provide a valid number in parameters', res)
     User.getPropertyById(Id)
       .then(e => {
       res.locals.property = e.rows[0];

@@ -13,11 +13,11 @@ class authMiddleware {
   static inputValidator(req, res, next) {
     const { firstName, lastName, email, address, phoneNumber, isAgent } = req.body;
     const valid = [
-      new validate(firstName).string().required().min(2).max(30).alpha(),
-      new validate(lastName).string().required().min(2).max(30).alpha(),
-      new validate(email).string().required().min(2).max(30),
-      new validate(address).string().required().min(2).alphaNum(),
-      new validate(phoneNumber).string().required().min(3).max(15).numeric()
+      new validate(firstName, req.body).string().required().min(2).max(30).alpha(),
+      new validate(lastName, req.body).string().required().min(2).max(30).alpha(),
+      new validate(email, req.body).string().required().min(2).max(30),
+      new validate(address, req.body).string().required().min(2).alphaNum(),
+      new validate(phoneNumber, req.body).string().required().min(3).max(15).numeric()
     ]
     if(valid[0].error)return errHandle(valid[0].status, valid[0].error, res);
     next()

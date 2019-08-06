@@ -1,22 +1,29 @@
 
 class Validate {
-  constructor(value) {
-    this.value = value;
-    this.error = null
-    this.status = 400
+  constructor(val,object) {
+    this.val = val;
+    this.error = null;
+    this.status = 400;
+    this.object = object;
+    function oopp(object, value){
+      return Object.keys(object).find(key => object[key] === value);
+    }
+    this.obj = oopp(object,val)
   }
 
+  
+
   required() {
-    if (!this.value ){
-      this.error = 'required'
+    if (!this.val ){
+      this.error = `${this.obj} is required`
       return this;
-    } 
+    }
     return this;
   }
 
   min(len) {
-    if (this.value.length < len) {
-      this.error = 'its less'
+    if (this.val.length < len) {
+      this.error = `${this.obj} should be greater than ${len-1}`
       return this;
     }
       return this;
@@ -24,56 +31,56 @@ class Validate {
   }
 
   max(len) {
-    if (this.value.length > len){
-      this.error = 'its more'
+    if (this.val.length > len){
+      this.error = `${this.obj} should be less than ${len}`
       return this;
     }
     return this;
   }
 
   alpha() {
-    if (!this.value.match(/^[a-zA-Z]+$/)){
-      this.error = 'should be alphabetic'
+    if (!this.val.match(/^[a-zA-Z]+$/)){
+      this.error = `${this.obj} should be alphabetic`
       return this;
     }
     return this;
   }
 
   alphaNum() {
-    if (!this.value.match(/^[a-zA-Z0-9]+$/)){
-      this.error = 'should be alphanumeric'
+    if (!this.val.match(/^[a-zA-Z0-9]+$/)){
+      this.error = `${this.obj} should be alphanumeric`
       return this;
     }
     return this;
   }
 
   numeric() {
-    if (!this.value.match(/^[0-9]+$/)){
-      this.error = 'should be numeric'
+    if (!this.val.match(/^[0-9]+$/)){
+      this.error = `${this.obj} should be numeric`
       return this;
     }
     return this;
   }
 
   num() {
-    if (typeof this.value !== 'number'){
-      this.error = 'should be a number'
+    if (typeof this.val !== 'number'){
+      this.error = `${this.obj} should be a number`
       return this;
     }
     return this;
   }
 
   bool() {
-    if (this.value !== 'boolean'){
-      this.error = 'should be a boolean'
+    if (this.val !== 'boolean'){
+      this.error = `${this.obj} should be a boolean`
       return this;
     }
     return this;
   }
 
   string() {
-    if (typeof this.value !== 'string'){
-      this.error = 'should be a string'
+    if (typeof this.val !== 'string'){
+      this.error = `${this.obj} should be a string`
       return this;
     }
     return this;
