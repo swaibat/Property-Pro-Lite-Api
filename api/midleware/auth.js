@@ -1,29 +1,26 @@
 import bcrypt from 'bcrypt';
-import Joi from '@hapi/joi';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { User } from '../models/users';
 import errHandle from '../helpers/errors';
+import validate from '../helpers/validator'
 import store from 'store';
 
 dotenv.config();
 
-
 class authMiddleware {
+
   static inputValidator(req, res, next) {
-    const authSchema = Joi.object().keys({
-      firstName: Joi.string().min(3).regex(/^[a-zA-Z\-]+$/).required(),
-      lastName: Joi.string().min(3).regex(/^[a-zA-Z\-]+$/).required(),
-      address: Joi.string().min(3).regex(/^[a-zA-Z0-9]+$/).required(),
-      password: Joi.string().regex(/^[a-zA-Z0-9]{3,30}$/).required(),
-      phoneNumber: Joi.string().regex(/^[a-zA-Z0-9]{10,30}$/).required(),
-      email: Joi.string().email({ minDomainSegments: 2 }).required(),
-      isAgent: Joi.required(),
-    });
-    const data = Joi.validate(req.body, authSchema);
-    if (typeof req.body.isAgent !== 'boolean') return errHandle(400, 'isAgent should be a boolean', res)
-    if (data.error) return errHandle(400, `${data.error.details[0].message.replace('"', '').split('"')[0]} field  is invalid `, res);
-    next();
+    const { firstName, lastName, email, address, phoneNumber, isAgent } = req.body;
+    const valid = [
+      new validate(firstName).string().required().min(2).max(30).alpha(),
+      new validate(lastName).string().required().min(2).max(30).alpha(),
+      new validate(email).string().required().min(2).max(30),
+      new validate(address).string().required().min(2).alphaNum(),
+      new validate(phoneNumber).string().required().min(3).max(15).numeric()
+    ]
+    if(valid[0].error)return errHandle(valid[0].status, valid[0].error, res);
+    next()
   }
 
   // verify user token
@@ -31,7 +28,7 @@ class authMiddleware {
     let keys = store.get('token')
     const bearerHeader = req.headers.authorization;
     if (!bearerHeader && !keys ) return errHandle(403, 'provide a token to get our services', res);
-    res.locals.token = bearerHeader.split(' ')[1] || keys;
+    bearerHeader ? res.locals.token = bearerHeader.split(' ')[1] : res.locals.token = keys;
     next();
   }
 

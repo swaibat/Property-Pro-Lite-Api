@@ -112,18 +112,6 @@ describe('/POST/signup routes', () => {
           done();
         });
     });
-    it('CHECK if User doesnt Exists', (done) => {
-        chai.request(app)
-          .post('/api/v2/users/auth/signup')
-          .send(testdata[13])
-          .end((err, res) => {
-            res.should.have.status(400);
-            res.body.should.be.a('object');
-            res.body.should.have.property('status').eql(400);
-            res.body.should.have.property('message').eql('firstName field  is invalid ');
-            done();
-          });
-      });
       it('Method not allowed', (done) => {
         chai.request(app)
           .patch('/api/v2/users/auth/signup')

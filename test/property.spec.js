@@ -218,18 +218,7 @@ describe('POST/flag', () => {
 });
 
 describe('/VALIDATES all input fields', () => {
-  it('VALIDATES signup required fields', (done) => {
-    chai.request(app)
-      .post('/api/v2/users/auth/signup')
-      .send(testdata[1])
-      .end((err, res) => {
-        res.should.have.status(400);
-        res.body.should.be.a('object');
-        res.body.should.have.property('status').eql(400);
-        res.body.should.have.property('message').eql('isAgent should be a boolean');
-        done();
-      });
-  });
+
   it('view specific Invalid property', (done) => {
     chai.request(app)
       .get('/api/v2/property?type=bedrooms')

@@ -7,18 +7,21 @@ import Auth from '../midleware/auth';
 
 const router = express.Router();
 
+const userRoutes = [ Auth.verifyToken, Auth.ensureUserToken, Ads.getPropertyById]
+const adminRoute = [ Auth.verifyToken, Auth.ensureUserToken, Auth.agentCheck]
+const adminRoutes = [ Auth.verifyToken, Auth.ensureUserToken, Auth.agentCheck, Ads.getPropertyById ]
+
 router
   .post('/users/auth/signup', Auth.inputValidator, Auth.checkUserExists, Auth.createUserToken, user.signUp)
   .post('/users/auth/signin', Auth.createUserToken, Auth.checkNoUser, user.signIn)
 // property routes
-  .post('/property', Auth.verifyToken, Auth.ensureUserToken, Auth.agentCheck, Ads.checkIfAdExist, Ads.uploads, property.postProperty)
-  .patch('/property/:Id', Auth.verifyToken, Auth.ensureUserToken, Ads.getPropertyById, Ads.AgentAndOwner, property.updateProperty)
-  .patch('/property/:Id/sold', Auth.verifyToken, Auth.ensureUserToken, Auth.agentCheck, Ads.getPropertyById, Ads.checkIfSold, Ads.AgentAndOwner, property.markSold)
-  .delete('/property/:Id', Auth.verifyToken, Auth.ensureUserToken, Auth.agentCheck, Ads.getPropertyById, Ads.AgentAndOwner, property.deleteProperty)
+  .post('/property', adminRoute, Ads.checkIfAdExist, Ads.uploads, property.postProperty)
+  .patch('/property/:Id', adminRoutes,Ads.AgentAndOwner, property.updateProperty)
+  .patch('/property/:Id/sold', adminRoutes, Ads.checkIfSold, Ads.AgentAndOwner, property.markSold)
+  .delete('/property/:Id', adminRoutes, Ads.AgentAndOwner, property.deleteProperty)
   .get('/property/', Auth.verifyToken, Auth.ensureUserToken, Ads.queryType, property.getAllProperty)
-  .get('/property/:Id', Auth.verifyToken, Auth.ensureUserToken, Ads.getPropertyById, property.singleProperty)
-// flag
-  .post('/flag/:Id', Auth.verifyToken, Auth.ensureUserToken, Ads.getPropertyById, Ads.checkIfFlagged, FlagController.postFlag)
+  .get('/property/:Id', userRoutes, property.singleProperty)
+  .post('/flag/:Id', userRoutes, Ads.checkIfFlagged, FlagController.postFlag)
 
 
 export default router;
