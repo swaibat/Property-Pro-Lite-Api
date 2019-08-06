@@ -96,7 +96,7 @@ class Validate {
 
   types() {
     if (!this.val.match(/^(1bedrooms|3bedrooms|5bedrooms|miniFlat|others)$/)){
-      this.error = `${this.obj} is invalid`
+      this.error = true;
       return this;
     }
     return this;
