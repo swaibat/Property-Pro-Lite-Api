@@ -45,7 +45,9 @@ describe('ALL AGENT strict routes', () => {
     chai.request(app)
       .post('/api/v2/property')
       .set('Authorization', `Bearer ${agentToken}`)
-      .send(testAds[0])
+      .field('Content-Type', 'multipart/form-data')
+      .field(testAds[0])
+      .attach("imageUrl","api/data/1.png") 
       .end((err, res) => {
         res.should.have.status(201);
         res.body.should.be.a('object');
@@ -60,7 +62,9 @@ describe('ALL AGENT strict routes', () => {
     chai.request(app)
       .post('/api/v2/property')
       .set('Authorization', `Bearer ${agentToken}`)
-      .send(testAds[0])
+      .field('Content-Type', 'multipart/form-data')
+      .field(testAds[0])
+      .attach("imageUrl","api/data/1.png") 
       .end((err, res) => {
         res.should.have.status(409);
         res.body.should.be.a('object');
@@ -72,7 +76,8 @@ describe('ALL AGENT strict routes', () => {
     chai.request(app)
       .patch('/api/v2/property/1')
       .set('Authorization', `Bearer ${agentToken}`)
-      .send(testAds[2])
+      .field('Content-Type', 'multipart/form-data')
+      .field(testAds[2])
       .end((err, res) => {
         res.should.have.status(200);
         res.body.should.be.a('object');
@@ -169,7 +174,7 @@ describe('/CHECK tokens and relevant middlewares', () => {
       .end((err, res) => {
         res.should.have.status(400);
         res.body.should.be.a('object');
-        res.body.should.have.property('error').eql('provide a valid number in parameters');
+        res.body.should.have.property('message').eql('provide a valid number in parameters');
         done();
       });
   });

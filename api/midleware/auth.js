@@ -10,12 +10,12 @@ dotenv.config();
 
 class authMiddleware {
 
-  static inputValidator(req, res, next) {
-    const { firstName, lastName, email, address, phoneNumber, isAgent } = req.body;
+  static validator(req, res, next) {
+    const { firstName, lastName, email, address, phoneNumber } = req.body;
     const valid = [
       new validate(firstName, req.body).string().required().min(2).max(30).alpha(),
       new validate(lastName, req.body).string().required().min(2).max(30).alpha(),
-      new validate(email, req.body).string().required().min(2).max(30),
+      new validate(email, req.body).string().required().email(),
       new validate(address, req.body).string().required().min(2).alphaNum(),
       new validate(phoneNumber, req.body).string().required().min(3).max(15).numeric()
     ]
