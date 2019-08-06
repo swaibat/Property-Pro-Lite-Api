@@ -23,10 +23,9 @@ class adsMiddleware {
   }
 
   static getPropertyById(req, res, next) {
-    const { Id } = req.params;
-    const validparam = Id.match(/^[0-9]+$/);
-    if(!validparam) return errHandle(400, 'provide a valid number in parameters', res)
-    User.getPropertyById(Id)
+    const validparam = new validate(req.params.Id, req.body).numeric();
+    if(validparam.error) return errHandle(400, 'provide a valid number in parameters', res)
+    User.getPropertyById(req.params.Id)
       .then(e => {
       res.locals.property = e.rows[0];
       if (!res.locals.property) return errHandle(404, 'property with given id not Found', res);
@@ -49,10 +48,10 @@ class adsMiddleware {
 
 
   static queryType(req, res, next) {
-    if (typeof req.query.type !== 'undefined') {
+    if (req.query.type) {
       const property = User.queryTypeOfProperty(req.query.type, res.locals.user.isagent);
-      const matchType = req.query.type.match(/^(singlerooms|3bedrooms|5bedrooms|miniFlat|others)$/);
-      if (!matchType) return errHandle(400, 'We only have these types singlerooms, 3bedrooms, 5bedrooms, miniFlat ,others', res);
+      const matchType = new validate(req.query.type, req.body).string().types();
+      if (matchType.error) return errHandle(400, 'We only have these types singlerooms, 3bedrooms, 5bedrooms, miniFlat ,others', res);
       return property.then(e => resHandle(200, 'operation successfull', e.rows, res));
     }
     next();
@@ -69,26 +68,15 @@ class adsMiddleware {
   }
 
   static uploads(req, res, next) {
-  if(req.headers['content-type'] === 'application/json'){
-    res.locals.imgArr = [req.body.imageUrl]
-    return next()
-  }
-
+  req.headers['content-type'] === 'application/json' ? res.locals.imgArr = [req.body.imageUrl] : next();
   const imgs = req.files.imageUrl.length ? req.files.imageUrl : [req.files.imageUrl];
-  const  files = imgs.map(e => e.tempFilePath)
-  let upload_res = files.map(file => new Promise((resolve, reject) => {
-      cloudinary.v2.uploader.upload(file, (error, result) => {
-          if(error) reject(error)
-          else resolve(result.url)
-      })
+  let upload_res = imgs.map(e => e.tempFilePath).map(file => new Promise((resolve, reject) => {
+    cloudinary.v2.uploader.upload(file, (error, result) => error ? reject(error) : resolve(result.url))
   })
   )
   Promise.all(upload_res)
     .catch(error => error.code === 'ENOTFOUND' ? errHandle(400,'No internet connection to remote storage', res ) : error)
-    .then(result =>{
-      res.locals.imgArr = result
-      next()
-    })
+    .then(result => {res.locals.imgArr = result; next()} )
 }
 
 }
