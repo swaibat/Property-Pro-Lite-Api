@@ -9,9 +9,7 @@ class Flag {
   }
 
   static checkFlagged(property_id) {
-    const query = 'SELECT * FROM flags WHERE property_id=$1';
-    const values = [property_id];
-    return client.query(query, values);
+    return client.query(`SELECT * FROM flags WHERE property_id='${property_id}'`);
   }
 }
 

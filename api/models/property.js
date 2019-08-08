@@ -12,20 +12,15 @@ class Property {
   }
 
   static getPropertyByOwner(email){
-    const IdQuery = 'SELECT * FROM property WHERE owneremail=$1'
-    const value = [email];
-    return client.query(IdQuery,value )
+    return client.query(`SELECT * FROM property WHERE owneremail='${email}'`)
   }
 
-  static checkIfPropertyExist(ownerEmail,price,address,type){
-    const typeQuery = 'SELECT * FROM property WHERE owneremail=$1 and price=$2 and address=$3 and type=$4'
-    const values = [ownerEmail,price,address,type]
-    return client.query(typeQuery,values)
+  static checkIfPropertyExist(property){
+    return client.query(`SELECT * FROM property WHERE ${property}`)
   }
 
   static queryAll(query){
-    const typeQuery = `SELECT * FROM property WHERE ${query}`
-      return client.query(typeQuery)
+      return client.query(`SELECT * FROM property WHERE ${query}`)
     }
 }
 

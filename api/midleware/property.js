@@ -5,30 +5,27 @@ import resHandle from '../helpers/response';
 import errHandle from '../helpers/errors';
 import cloudinary from '../config/config';
 import validate from '../helpers/validator'
-import query from '../helpers/query'
+import { queryHandle } from '../helpers/requests'
 
 class adsMiddleware {
 
   static validator(req, res, next) {
-    const { price, address, city, state, type } = req.body;
     const valid = [
-      new validate(price, req.body).string().required().min(2).max(30).numeric(),
-      new validate(price, req.body).string().required().min(2).max(30).numeric(),
-      new validate(address, req.body).string().required().min(2),
-      new validate(city, req.body).string().required().min(2),
-      new validate(state, req.body).string().required().min(2).alphaNum(),
-      new validate(type, req.body).string().required().types()
+      new validate({price:req}).string().required().min(2).max(30).numeric(),
+      new validate({address:req}).string().required().min(2),
+      new validate({city:req}).string().required().min(2),
+      new validate({state:req}).string().required().min(2).alphaNum(),
+      new validate({type:req}).string().required().types()
     ]
     if(valid[0].error)return errHandle(valid[0].status, valid[0].error, res);
     next()
   }
 
   static getPropertyById(req, res, next) {
-    const validparam = new validate(req.params.Id, req.body).numeric();
-    if(validparam.error) return errHandle(400, 'provide a valid number in parameters', res)
+    const param = new validate(req.params.Id, req.body).numeric();
+    if(param.error) return errHandle(param.status, param.error, res)
     return User.getPropertyById(req.params.Id)
-      .then(e => {
-      res.locals.property = e.rows[0];
+      .then(e => {res.locals.property = e.rows[0];
       if (!res.locals.property) return errHandle(404, 'property with given id not Found', res);
       next();
     })
@@ -42,8 +39,7 @@ class adsMiddleware {
 
 
   static checkIfAdExist(req, res, next) {
-    const { price, address, type } = req.body;
-    Property.checkIfPropertyExist(res.locals.user.email, price, address, type)
+    Property.checkIfPropertyExist(queryHandle(req.body))
     .then(e => e.rows[0] ? errHandle(409, 'You can not post this propety again', res ):next())
   }
 
@@ -51,7 +47,7 @@ class adsMiddleware {
   static queryType(req, res, next) {
     const queryLen = Object.entries(req.query).length;
     if(queryLen > 0){
-      return Property.queryAll(query(req.query))
+      return Property.queryAll(queryHandle(req.query))
         .then(e => resHandle(200, 'Query successfull', e.rows, res));
     }
     return next();
@@ -63,19 +59,20 @@ class adsMiddleware {
   }
 
   static checkIfSold(req, res, next) {
-    return Agent.checkSold(res.locals.property.id)
+    return Agent.markPropertySold(res.locals.property.id)
       .then(e => e.rows[0] ? errHandle(409, 'property already marked sold', res ):next())
   }
 
   static uploads(req, res, next) {
-  const imgs = req.files.imageUrl.length ? req.files.imageUrl : [req.files.imageUrl];
-  const files = imgs.map(e => e.tempFilePath)
-  let upload_res = files.map(file => new Promise((resolve, reject) => {
-    cloudinary.v2.uploader.upload(file, (error, result) => error ? reject(error) : resolve(result.url))
-  })
+    const imgs = req.files.imageUrl.length ? req.files.imageUrl : [req.files.imageUrl];
+    const files = imgs.map(e => e.tempFilePath)
+    let upload_res = files.map(file => new Promise((resolve, reject) => {
+      cloudinary.v2.uploader.upload(file, (error, result) => error ? reject(error) : resolve(result.url))
+    })
   )
   Promise.all(upload_res)
-    .catch(error => error.code === 'ENOTFOUND' ? errHandle(400,'No internet connection to remote storage', res ) : error)
+    .catch(error => error.code === 'ENOTFOUND' 
+    ? errHandle(400,'No internet connection to remote storage', res ) : error)
     .then(result => {res.locals.imgArr = result; next()} )
 }
 

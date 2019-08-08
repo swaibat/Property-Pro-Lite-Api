@@ -18,32 +18,28 @@ class User {
   }
 
   static getPropertyById(id){
-    const IdQuery = 'SELECT * FROM property WHERE id=$1'
-    const value = [id];
-    return client.query(IdQuery,value )
+    return client.query(`SELECT * FROM property WHERE id='${id}'`)
   }
 
 
   static getUserByEmail(email) {
-    const query = 'SELECT * FROM users WHERE email=$1';
-    const values = [email];
-    return client.query(query, values);
+    return client.query(`SELECT * FROM users WHERE email='${email}'`);
   }
 
   static queryTypeOfProperty(type, isagent) {
     const query = isagent
       ? 'SELECT * FROM property WHERE type=$1 '
       : `SELECT * FROM property WHERE type=$1 and status='available' `;
-    const value = [type];
-    return client.query(query, value);
+    return client.query(query, [type]);
   }
 
 
   static allProperty(isagent) {
-    const query = isagent
+    return client.query(
+      isagent
       ? 'SELECT * FROM property'
-      : `SELECT * FROM property WHERE status='available' `;
-    return client.query(query);
+      : `SELECT * FROM property WHERE status='available'`
+    );
   }
 
 }
@@ -56,29 +52,16 @@ class Agent extends User {
     return client.query(query, values);
   }
 
-  static updateProperty(ad, id) {
-    const query = 'UPDATE property SET price=$1, address=$2, city=$3, state=$4, type=$5 WHERE id=$6 RETURNING *';
-    const value = [ad.price, ad.address, ad.city, ad.state, ad.type, id];
-    return client.query(query, value);
+  static updateProperty(property, id) {
+    return client.query(`UPDATE property SET ${property} WHERE id='${id}' RETURNING *`);
   }
-
 
   static markPropertySold(id) {
-    const query = 'UPDATE property SET status=$1 WHERE id=$2 RETURNING *';
-    const value = ['sold', id];
-    return client.query(query, value);
-  }
-
-  static checkSold(id) {
-    const query = 'SELECT * FROM property WHERE status=$1 and id=$2 ';
-    const value = ['sold', id];
-    return client.query(query, value);
+    return client.query(`UPDATE property SET status='sold' WHERE id='${id}' RETURNING *`);
   }
 
   static delProperty(id) {
-    const query = 'DELETE FROM  property WHERE id=$1 RETURNING *';
-    const value = [id];
-    return client.query(query, value);
+    return client.query(`DELETE FROM  property WHERE id='${id}' RETURNING *`);
   }
 }
 

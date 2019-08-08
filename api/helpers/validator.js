@@ -1,21 +1,15 @@
 
 class Validate {
-  constructor(val,object) {
-    this.val = val;
+  constructor(data) {
+    this.key = Object.entries(data)[0][0];
+    this.val = Object.entries(data)[0][1].body[this.key];
     this.error = null;
     this.status = 400;
-    this.object = object;
-    function findKey(object, value){
-      return Object.keys(object).find(key => object[key] === value);
-    }
-    this.obj = findKey(object,val)
   }
-
-  
 
   required() {
     if (!this.val ){
-      this.error = `${this.obj} is required`
+      this.error = `${this.key} is required`
       return this;
     }
     return this;
@@ -23,7 +17,7 @@ class Validate {
 
   min(len) {
     if (this.val.length < len) {
-      this.error = `${this.obj} should be greater than ${len-1}`
+      this.error = `${this.key} should be greater than ${len-1}`
       return this;
     }
       return this;
@@ -32,7 +26,7 @@ class Validate {
 
   max(len) {
     if (this.val.length > len){
-      this.error = `${this.obj} should be less than ${len}`
+      this.error = `${this.key} should be less than ${len}`
       return this;
     }
     return this;
@@ -40,7 +34,7 @@ class Validate {
 
   alpha() {
     if (!this.val.match(/^[a-zA-Z]+$/)){
-      this.error = `${this.obj} should be alphabetic`
+      this.error = `${this.key} should be alphabetic`
       return this;
     }
     return this;
@@ -48,7 +42,7 @@ class Validate {
 
   alphaNum() {
     if (!this.val.match(/^[a-zA-Z0-9]+$/)){
-      this.error = `${this.obj} should be alphanumeric`
+      this.error = `${this.key} should be alphanumeric`
       return this;
     }
     return this;
@@ -56,7 +50,7 @@ class Validate {
 
   numeric() {
     if (!this.val.match(/^[0-9]+$/)){
-      this.error = `${this.obj} should be numeric`
+      this.error = `${this.key} should be numeric`
       return this;
     }
     return this;
@@ -64,7 +58,7 @@ class Validate {
 
   num() {
     if (typeof this.val !== 'number'){
-      this.error = `${this.obj} should be a number`
+      this.error = `${this.key} should be a number`
       return this;
     }
     return this;
@@ -72,7 +66,7 @@ class Validate {
 
   bool() {
     if (this.val !== 'boolean'){
-      this.error = `${this.obj} should be a boolean`
+      this.error = `${this.key} should be a boolean`
       return this;
     }
     return this;
@@ -80,7 +74,7 @@ class Validate {
 
   string() {
     if (typeof this.val !== 'string'){
-      this.error = `${this.obj} should be a string`
+      this.error = `${this.key} should be a string`
       return this;
     }
     return this;
@@ -88,7 +82,7 @@ class Validate {
 
   email() {
     if (!this.val.match(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)){
-      this.error = `${this.obj} is invalid`
+      this.error = `${this.key} is invalid`
       return this;
     }
     return this;
@@ -104,7 +98,7 @@ class Validate {
 
   images() {
     if (!this.val.match(/([a-z\-_0-9\/\:\.]*\.(jpg|jpeg|png|webp|gif))/)){
-      this.error = `${this.obj} is invalid`
+      this.error = `${this.key} is invalid`
       return this;
     }
     return this;

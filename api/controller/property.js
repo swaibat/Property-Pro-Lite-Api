@@ -1,6 +1,7 @@
 import Property from '../models/property';
 import { Agent, User } from '../models/users';
 import resHandle from '../helpers/response';
+import { bodyHandle } from '../helpers/requests'
 
 class PropertyController {
   static postProperty(req, res) {
@@ -11,8 +12,7 @@ class PropertyController {
   }
 
   static updateProperty(req, res) {
-    const { price, address, city, state, type } = req.body;
-    return Agent.updateProperty(new Property(price, address, city, state, type),req.params.Id)
+    return Agent.updateProperty(bodyHandle(req.body),req.params.Id)
       .then(e => resHandle(200, 'Property Updated', e.rows[0], res));
   }
 

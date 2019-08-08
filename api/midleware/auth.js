@@ -11,13 +11,12 @@ dotenv.config();
 class authMiddleware {
 
   static validator(req, res, next) {
-    const { firstName, lastName, email, address, phoneNumber } = req.body;
     const valid = [
-      new validate(firstName, req.body).string().required().min(2).max(30).alpha(),
-      new validate(lastName, req.body).string().required().min(2).max(30).alpha(),
-      new validate(email, req.body).string().required().email(),
-      new validate(address, req.body).string().required().min(2).alphaNum(),
-      new validate(phoneNumber, req.body).string().required().min(3).max(15).numeric()
+      new validate({firstName:req}).string().required().min(2).max(30).alpha(),
+      new validate({lastName:req}).string().required().min(2).max(30).alpha(),
+      new validate({email:req}).string().required().email(),
+      new validate({address:req}).string().required().min(2).alphaNum(),
+      new validate({phoneNumber:req}).string().required().min(3).max(15).numeric()
     ]
     if(valid[0].error)return errHandle(valid[0].status, valid[0].error, res);
     next()
