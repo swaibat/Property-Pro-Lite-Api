@@ -110,9 +110,12 @@ export const testAds = [
     status: 'sold',
   },
   {
-    address: 'nansana',
+    price: 2000,
     city: 'kampala',
-    state: 'kampala',
+    state: 'central',
+    address: 'kampala',
+    type: '3bedrooms',
+    imageUrl: 'images/hose1.jpg'
   },
   {
     price: '200',

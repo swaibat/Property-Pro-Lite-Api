@@ -14,6 +14,7 @@ const adminRoutes = [ Auth.verifyToken, Auth.ensureUserToken, Auth.agentCheck, A
 router
   .post('/users/auth/signup', Auth.validator, Auth.checkUserExists, Auth.createUserToken, user.signUp)
   .post('/users/auth/signin', Auth.createUserToken, Auth.checkNoUser, user.signIn)
+  .get('/users/myAccount', Auth.verifyToken, Auth.ensureUserToken, Ads.queryType, property.myAccount)
 // property routes
   .post('/property', adminRoute, Ads.validator, Ads.checkIfAdExist, Ads.uploads, property.postProperty)
   .patch('/property/:Id', adminRoutes,Ads.AgentAndOwner, property.updateProperty)

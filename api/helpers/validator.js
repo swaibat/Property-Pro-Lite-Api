@@ -5,10 +5,10 @@ class Validate {
     this.error = null;
     this.status = 400;
     this.object = object;
-    function oopp(object, value){
+    function findKey(object, value){
       return Object.keys(object).find(key => object[key] === value);
     }
-    this.obj = oopp(object,val)
+    this.obj = findKey(object,val)
   }
 
   

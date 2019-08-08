@@ -6,18 +6,18 @@ class PropertyController {
   static postProperty(req, res) {
     const { price, address, city, state, type } = req.body;
     const { email, phonenumber } = res.locals.user;
-    Agent.createProperty(new Property(price, address, city, state, type, res.locals.imgArr, email, phonenumber))
+    return Agent.createProperty(new Property(price, address, city, state, type, res.locals.imgArr, email, phonenumber))
       .then(e => resHandle(201, 'Property created', e.rows[0], res));
   }
 
   static updateProperty(req, res) {
-    const { address, city, state } = req.body;
-    Agent.updateProperty(address, state, city, req.params.Id)
+    const { price, address, city, state, type } = req.body;
+    return Agent.updateProperty(new Property(price, address, city, state, type),req.params.Id)
       .then(e => resHandle(200, 'Property Updated', e.rows[0], res));
   }
 
   static markSold(req, res) {
-    Agent.markPropertySold(req.params.Id)
+    return Agent.markPropertySold(req.params.Id)
       .then(e => resHandle(200, 'property marked as sold', e.rows[0], res));
   }
 
@@ -34,6 +34,12 @@ class PropertyController {
   static singleProperty(req, res) {
     const { property } = res.locals;
     res.status(200).send({ status: 200, property });
+  }
+
+  static myAccount(req,res){
+    return Property.getPropertyByOwner(res.locals.user.email)
+      .then(e => resHandle(200, 'my account', {details:res.locals.user,myAds:e.rows}, res));
+
   }
 }
 

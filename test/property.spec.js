@@ -223,17 +223,6 @@ describe('POST/flag', () => {
 });
 
 describe('/VALIDATES all input fields', () => {
-
-  it('view specific Invalid property', (done) => {
-    chai.request(app)
-      .get('/api/v2/property?type=bedrooms')
-      .set('Authorization', `Bearer ${userToken}`)
-      .end((err, res) => {
-        res.should.have.status(400);
-        res.body.should.have.property('message').eql('We only have these types singlerooms, 3bedrooms, 5bedrooms, miniFlat ,others');
-        done();
-      });
-  });
   it('view specific property Not found', (done) => {
     chai.request(app)
       .get('/api/v2/property?type=miniFlat')

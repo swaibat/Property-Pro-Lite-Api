@@ -22,6 +22,11 @@ class Property {
     const values = [ownerEmail,price,address,type]
     return client.query(typeQuery,values)
   }
+
+  static queryAll(query){
+    const typeQuery = `SELECT * FROM property WHERE ${query}`
+      return client.query(typeQuery)
+    }
 }
 
 export default Property;

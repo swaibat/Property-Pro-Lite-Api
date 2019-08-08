@@ -56,9 +56,9 @@ class Agent extends User {
     return client.query(query, values);
   }
 
-  static updateProperty(address, state, city, id) {
-    const query = 'UPDATE property SET address=$1,city=$2,state=$3 WHERE id=$4 RETURNING *';
-    const value = [address, city, state, id];
+  static updateProperty(ad, id) {
+    const query = 'UPDATE property SET price=$1, address=$2, city=$3, state=$4, type=$5 WHERE id=$6 RETURNING *';
+    const value = [ad.price, ad.address, ad.city, ad.state, ad.type, id];
     return client.query(query, value);
   }
 
@@ -83,4 +83,4 @@ class Agent extends User {
 }
 
 export { Agent, User }
-;
+

@@ -36,7 +36,7 @@ class authMiddleware {
   static ensureUserToken(req, res, next) {
     jwt.verify(res.locals.token, process.env.appSecreteKey, (err, user) => {
       if (err) return errHandle(403, err.message.replace("jwt", "Token"), res);;
-      User.getUserByEmail(user.email)
+      return User.getUserByEmail(user.email)
         .then(u => {res.locals.user = u.rows[0], next()});
     });
   }

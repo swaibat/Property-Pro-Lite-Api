@@ -5,6 +5,7 @@ import resHandle from '../helpers/response';
 import errHandle from '../helpers/errors';
 import cloudinary from '../config/config';
 import validate from '../helpers/validator'
+import query from '../helpers/query'
 
 class adsMiddleware {
 
@@ -25,7 +26,7 @@ class adsMiddleware {
   static getPropertyById(req, res, next) {
     const validparam = new validate(req.params.Id, req.body).numeric();
     if(validparam.error) return errHandle(400, 'provide a valid number in parameters', res)
-    User.getPropertyById(req.params.Id)
+    return User.getPropertyById(req.params.Id)
       .then(e => {
       res.locals.property = e.rows[0];
       if (!res.locals.property) return errHandle(404, 'property with given id not Found', res);
@@ -48,29 +49,28 @@ class adsMiddleware {
 
 
   static queryType(req, res, next) {
-    if (req.query.type) {
-      const property = User.queryTypeOfProperty(req.query.type, res.locals.user.isagent);
-      const matchType = new validate(req.query.type, req.body).string().types();
-      if (matchType.error) return errHandle(400, 'We only have these types singlerooms, 3bedrooms, 5bedrooms, miniFlat ,others', res);
-      return property.then(e => resHandle(200, 'operation successfull', e.rows, res));
+    const queryLen = Object.entries(req.query).length;
+    if(queryLen > 0){
+      return Property.queryAll(query(req.query))
+        .then(e => resHandle(200, 'Query successfull', e.rows, res));
     }
-    next();
+    return next();
   }
 
   static checkIfFlagged(req, res, next) {
-    Flag.checkFlagged(res.locals.property.id)
-    .then(e => e.rows[0] ? errHandle(409, 'property already flagged', res ):next())
+    return Flag.checkFlagged(res.locals.property.id)
+      .then(e => e.rows[0] ? errHandle(409, 'property already flagged', res ):next())
   }
 
   static checkIfSold(req, res, next) {
-    Agent.checkSold(res.locals.property.id)
-    .then(e => e.rows[0] ? errHandle(409, 'property already marked sold', res ):next())
+    return Agent.checkSold(res.locals.property.id)
+      .then(e => e.rows[0] ? errHandle(409, 'property already marked sold', res ):next())
   }
 
   static uploads(req, res, next) {
-  req.headers['content-type'] === 'application/json' ? res.locals.imgArr = [req.body.imageUrl] : next();
   const imgs = req.files.imageUrl.length ? req.files.imageUrl : [req.files.imageUrl];
-  let upload_res = imgs.map(e => e.tempFilePath).map(file => new Promise((resolve, reject) => {
+  const files = imgs.map(e => e.tempFilePath)
+  let upload_res = files.map(file => new Promise((resolve, reject) => {
     cloudinary.v2.uploader.upload(file, (error, result) => error ? reject(error) : resolve(result.url))
   })
   )
