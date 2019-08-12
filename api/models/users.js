@@ -1,20 +1,14 @@
 import client from '../services/db';
 
 class User {
-  constructor(firstName, lastName, email, address, phoneNumber, password, isAgent) {
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.email = email;
-    this.address = address;
-    this.phoneNumber = phoneNumber;
-    this.isAgent = isAgent;
-    this.password = password;
+  constructor(keys, values) {
+    this.keys = keys;
+    this.values = values
   }
 
   createUser() {
-    const userQuery = 'INSERT INTO users(firstName,lastName,email,address,phoneNumber,password,isAgent) VALUES($1,$2,$3,$4,$5,$6,$7) RETURNING *';
-    const values = [this.firstName, this.lastName, this.email, this.address, this.phoneNumber, this.password, this.isAgent];
-    return client.query(userQuery, values);
+    const userQuery = `INSERT INTO users(${this.keys}) VALUES($1,$2,$3,$4,$5,$6,$7) RETURNING *`;
+    return client.query(userQuery, this.values);
   }
 
   static getPropertyById(id){

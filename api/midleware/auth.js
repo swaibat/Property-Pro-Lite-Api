@@ -27,13 +27,13 @@ class authMiddleware {
     let keys = store.get('token')
     const bearerHeader = req.headers.authorization;
     if (!bearerHeader && !keys ) return errHandle(403, 'provide a token to get our services', res);
-    bearerHeader ? res.locals.token = bearerHeader.split(' ')[1] : res.locals.token = keys;
+    bearerHeader ? req.token = bearerHeader.split(' ')[1] : req.token = keys;
     next();
   }
 
   // check if real users trying access
   static ensureUserToken(req, res, next) {
-    jwt.verify(res.locals.token, process.env.appSecreteKey, (err, user) => {
+    jwt.verify(req.token, process.env.appSecreteKey, (err, user) => {
       if (err) return errHandle(403, err.message.replace("jwt", "Token"), res);;
       return User.getUserByEmail(user.email)
         .then(u => {res.locals.user = u.rows[0], next()});
@@ -42,8 +42,8 @@ class authMiddleware {
 
   // function creates user token
   static createUserToken(req, res, next) {
-    res.locals.token = jwt.sign({ email:req.body.email }, process.env.appSecreteKey, { expiresIn: '24hr' });
-    store.set('token', res.locals.token)
+    req.token = jwt.sign({ email:req.body.email }, process.env.appSecreteKey, { expiresIn: '24hr' });
+    store.set('token', req.token)
     return next();
   }
 

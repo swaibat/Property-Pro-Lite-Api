@@ -1,3 +1,5 @@
+import bcrypt from 'bcrypt';
+
 function queryHandle(object){
     const entries = Object.entries(object)
     let array = new Array()
@@ -16,5 +18,20 @@ function bodyHandle(object){
   return array.toString()
 }
 
+function postHandle(req){
+  if(req.url === '/users/auth/signup'){
+    req.body.password = bcrypt.hashSync(req.body.password, 10)
+  } 
+  const entries = Object.entries(req.body)
+  let keys = []
+  let values = []
+  for(const [key, value] of entries){
+    keys.push(key)
+    values.push(value)
+  }  
+ return { keys:keys.toString().replace(/'/g,""),values:values, token:req.token }
+}
 
-export { bodyHandle, queryHandle };
+
+
+export { bodyHandle, queryHandle,postHandle};
