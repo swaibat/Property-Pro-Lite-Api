@@ -1,15 +1,15 @@
 import Property from '../models/property';
 import { Agent, User } from '../models/users';
 import resHandle from '../helpers/response';
-import { bodyHandle } from '../helpers/requests'
-import getAdWithAgent from '../helpers/getAgent'
+import { bodyHandle } from '../helpers/requests';
+import getAdWithAgent from '../helpers/getAgent';
+import { postHandle } from '../helpers/requests';
 
 class PropertyController {
   static postProperty(req, res) {
-    const { price, address, city, state, type } = req.body;
-    const { email, phonenumber } = res.locals.user;
-    return Agent.createProperty(new Property(price, address, city, state, type, res.locals.imgArr, email, phonenumber))
-      .then(e => resHandle(201, 'Property created', e.rows[0], res));
+    const { keys, values } = postHandle(req)
+    return Agent.createProperty(keys, values)
+      .then(ad => resHandle(201, 'Property created', ad.rows[0], res));
   }
 
   static updateProperty(req, res) {
@@ -28,7 +28,7 @@ class PropertyController {
   }
 
   static getAllProperty(req, res) {
-    User.allProperty(res.locals.user.isagent)
+    User.allProperty(req.user.isagent)
       .then(ad =>{
         getAdWithAgent(ad).then(ads => resHandle(201, 'all property', ads, res))
       })
@@ -40,8 +40,8 @@ class PropertyController {
   }
 
   static myAccount(req,res){
-    return Property.getPropertyByOwner(res.locals.user.email)
-      .then(e => resHandle(200, 'my account', {details:res.locals.user,myAds:e.rows}, res));
+    return Property.getPropertyByOwner(req.user.email)
+      .then(e => resHandle(200, 'my account', {details:req.user,myAds:e.rows}, res));
 
   }
 }

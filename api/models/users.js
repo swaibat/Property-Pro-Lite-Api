@@ -40,9 +40,8 @@ class User {
 
 class Agent extends User {
 
-  static createProperty(ad){
-    const query = 'INSERT INTO property(price, address, city, state, type, imageUrl,ownerEmail,ownerPhonenumber) VALUES($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *';
-    const values = [ad.price, ad.address, ad.city, ad.state, ad.type, ad.imageUrl, ad.email, ad.phoneNumber];
+  static createProperty(keys,values){
+    const query = `INSERT INTO property(${keys}) VALUES($1,$2,$3,$4,$5,$6,$7) RETURNING *`;
     return client.query(query, values);
   }
 

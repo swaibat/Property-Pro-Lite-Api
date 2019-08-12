@@ -36,7 +36,7 @@ class authMiddleware {
     jwt.verify(req.token, process.env.appSecreteKey, (err, user) => {
       if (err) return errHandle(403, err.message.replace("jwt", "Token"), res);;
       return User.getUserByEmail(user.email)
-        .then(u => {res.locals.user = u.rows[0], next()});
+        .then(u => {req.user = u.rows[0], next()});
     });
   }
 
@@ -71,7 +71,7 @@ class authMiddleware {
 
   // check if the user is an agent
   static agentCheck(req, res, next) {
-    !res.locals.user.isagent ? errHandle(403, 'Only agent can access this service', res) : next();
+    !req.user.isagent ? errHandle(403, 'Only agent can access this service', res) : next();
   }
 }
 
