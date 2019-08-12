@@ -2,6 +2,7 @@ import Property from '../models/property';
 import { Agent, User } from '../models/users';
 import resHandle from '../helpers/response';
 import { bodyHandle } from '../helpers/requests'
+import getAdWithAgent from '../helpers/getAgent'
 
 class PropertyController {
   static postProperty(req, res) {
@@ -28,8 +29,10 @@ class PropertyController {
 
   static getAllProperty(req, res) {
     User.allProperty(res.locals.user.isagent)
-      .then(e => resHandle(200, 'all available property', e.rows, res));
-  }
+      .then(ad =>{
+        getAdWithAgent(ad).then(ads => resHandle(201, 'all property', ads, res))
+      })
+    }
 
   static singleProperty(req, res) {
     const { property } = res.locals;

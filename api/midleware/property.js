@@ -6,6 +6,7 @@ import errHandle from '../helpers/errors';
 import cloudinary from '../config/config';
 import validate from '../helpers/validator'
 import { queryHandle } from '../helpers/requests'
+import getAdWithAgent from '../helpers/getAgent'
 
 class adsMiddleware {
 
@@ -22,12 +23,13 @@ class adsMiddleware {
   }
 
   static getPropertyById(req, res, next) {
-    const param = new validate(req.params.Id, req.body).numeric();
-    if(param.error) return errHandle(param.status, param.error, res)
     return User.getPropertyById(req.params.Id)
-      .then(e => {res.locals.property = e.rows[0];
-      if (!res.locals.property) return errHandle(404, 'property with given id not Found', res);
-      next();
+    .then(ad => {
+      getAdWithAgent(ad).then(a => {
+        res.locals.property = a
+        if (!res.locals.property) return errHandle(404, 'property with given id not Found', res);
+        next();
+      })
     })
   }
 
@@ -48,7 +50,9 @@ class adsMiddleware {
     const queryLen = Object.entries(req.query).length;
     if(queryLen > 0){
       return Property.queryAll(queryHandle(req.query))
-        .then(e => resHandle(200, 'Query successfull', e.rows, res));
+      .then(ad =>{
+        getAdWithAgent(ad).then(ads => resHandle(201, 'Query successfull', ads, res))
+      })
     }
     return next();
   }
