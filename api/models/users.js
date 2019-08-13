@@ -1,86 +1,73 @@
 import client from '../services/db';
 
 class User {
-  constructor(firstName, lastName, email, address, phoneNumber, password, isAgent) {
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.email = email;
-    this.address = address;
-    this.phoneNumber = phoneNumber;
-    this.isAgent = isAgent;
-    this.password = password;
+  constructor(keys, values) {
+    this.keys = keys;
+    this.values = values
   }
 
   createUser() {
-    const userQuery = 'INSERT INTO users(firstName,lastName,email,address,phoneNumber,password,isAgent) VALUES($1,$2,$3,$4,$5,$6,$7) RETURNING *';
-    const values = [this.firstName, this.lastName, this.email, this.address, this.phoneNumber, this.password, this.isAgent];
-    return client.query(userQuery, values);
+    const userQuery = `INSERT INTO users(${this.keys}) VALUES($1,$2,$3,$4,$5,$6,$7) RETURNING *`;
+    return client.query(userQuery, this.values);
   }
 
   static getPropertyById(id){
-    const IdQuery = 'SELECT * FROM property WHERE id=$1'
-    const value = [id];
-    return client.query(IdQuery,value )
+    return client.query(`SELECT * FROM property WHERE id='${id}'`)
   }
 
 
   static getUserByEmail(email) {
-    const query = 'SELECT * FROM users WHERE email=$1';
-    const values = [email];
-    return client.query(query, values);
+    return client.query(`SELECT * FROM users WHERE email='${email}'`);
   }
 
   static queryTypeOfProperty(type, isagent) {
     const query = isagent
       ? 'SELECT * FROM property WHERE type=$1 '
       : `SELECT * FROM property WHERE type=$1 and status='available' `;
-    const value = [type];
-    return client.query(query, value);
+    return client.query(query, [type]);
   }
 
 
   static allProperty(isagent) {
-    const query = isagent
+    return client.query(
+      isagent
       ? 'SELECT * FROM property'
-      : `SELECT * FROM property WHERE status='available' `;
-    return client.query(query);
+      : `SELECT * FROM property WHERE status='available'`
+    );
+  }
+  
+  static getPropertyByOwner(email){
+    return client.query(`SELECT * FROM property WHERE owner='${email}'`)
   }
 
+  static checkIfPropertyExist(property){
+    return client.query(`SELECT * FROM property WHERE ${property}`)
+  }
+
+  static queryAll(query){
+      return client.query(`SELECT * FROM property WHERE ${query}`)
+  }
 }
 
 class Agent extends User {
 
-  static createProperty(ad){
-    const query = 'INSERT INTO property(price, address, city, state, type, imageUrl,ownerEmail,ownerPhonenumber) VALUES($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *';
-    const values = [ad.price, ad.address, ad.city, ad.state, ad.type, ad.imageUrl, ad.email, ad.phoneNumber];
+  static createProperty(keys,values){
+    const query = `INSERT INTO property(${keys}) VALUES($1,$2,$3,$4,$5,$6,$7) RETURNING *`;
     return client.query(query, values);
   }
 
-  static updateProperty(address, state, city, id) {
-    const query = 'UPDATE property SET address=$1,city=$2,state=$3 WHERE id=$4 RETURNING *';
-    const value = [address, city, state, id];
-    return client.query(query, value);
+  static updateProperty(property, id) {
+    return client.query(`UPDATE property SET ${property} WHERE id='${id}' RETURNING *`);
   }
-
 
   static markPropertySold(id) {
-    const query = 'UPDATE property SET status=$1 WHERE id=$2 RETURNING *';
-    const value = ['sold', id];
-    return client.query(query, value);
-  }
-
-  static checkSold(id) {
-    const query = 'SELECT * FROM property WHERE status=$1 and id=$2 ';
-    const value = ['sold', id];
-    return client.query(query, value);
+    return client.query(`UPDATE property SET status='sold' WHERE id='${id}' RETURNING *`);
   }
 
   static delProperty(id) {
-    const query = 'DELETE FROM  property WHERE id=$1 RETURNING *';
-    const value = [id];
-    return client.query(query, value);
+    return client.query(`DELETE FROM  property WHERE id='${id}' RETURNING *`);
   }
 }
 
 export { Agent, User }
-;
+

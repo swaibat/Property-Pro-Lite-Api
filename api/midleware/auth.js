@@ -11,15 +11,15 @@ dotenv.config();
 class authMiddleware {
 
   static validator(req, res, next) {
-    const { firstName, lastName, email, address, phoneNumber } = req.body;
     const valid = [
-      new validate(firstName, req.body).string().required().min(2).max(30).alpha(),
-      new validate(lastName, req.body).string().required().min(2).max(30).alpha(),
-      new validate(email, req.body).string().required().email(),
-      new validate(address, req.body).string().required().min(2).alphaNum(),
-      new validate(phoneNumber, req.body).string().required().min(3).max(15).numeric()
+      new validate({firstName:req}).string().required().min(2).max(30).alpha(),
+      new validate({lastName:req}).string().required().min(2).max(30).alpha(),
+      new validate({email:req}).string().required().email(),
+      new validate({address:req}).string().required().min(2).alphaNum(),
+      new validate({phoneNumber:req}).string().required().min(3).max(15).numeric()
     ]
-    if(valid[0].error)return errHandle(valid[0].status, valid[0].error, res);
+    const invalid = valid.find(e => e.error !== null)
+    if(invalid) return errHandle(invalid.status, invalid.error, res);
     next()
   }
 
@@ -28,23 +28,23 @@ class authMiddleware {
     let keys = store.get('token')
     const bearerHeader = req.headers.authorization;
     if (!bearerHeader && !keys ) return errHandle(403, 'provide a token to get our services', res);
-    bearerHeader ? res.locals.token = bearerHeader.split(' ')[1] : res.locals.token = keys;
+    bearerHeader ? req.token = bearerHeader.split(' ')[1] : req.token = keys;
     next();
   }
 
   // check if real users trying access
   static ensureUserToken(req, res, next) {
-    jwt.verify(res.locals.token, process.env.appSecreteKey, (err, user) => {
+    jwt.verify(req.token, process.env.appSecreteKey, (err, user) => {
       if (err) return errHandle(403, err.message.replace("jwt", "Token"), res);;
-      User.getUserByEmail(user.email)
-        .then(u => {res.locals.user = u.rows[0], next()});
+      return User.getUserByEmail(user.email)
+        .then(u => {req.user = u.rows[0], next()});
     });
   }
 
   // function creates user token
   static createUserToken(req, res, next) {
-    res.locals.token = jwt.sign({ email:req.body.email }, process.env.appSecreteKey, { expiresIn: '24hr' });
-    store.set('token', res.locals.token)
+    req.token = jwt.sign({ email:req.body.email }, process.env.appSecreteKey, { expiresIn: '24hr' });
+    store.set('token', req.token)
     return next();
   }
 
@@ -72,7 +72,7 @@ class authMiddleware {
 
   // check if the user is an agent
   static agentCheck(req, res, next) {
-    !res.locals.user.isagent ? errHandle(403, 'Only agent can access this service', res) : next();
+    !req.user.isagent ? errHandle(403, 'Only agent can access this service', res) : next();
   }
 }
 

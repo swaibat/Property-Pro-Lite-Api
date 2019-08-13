@@ -1,6 +1,6 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
-import { testdata, testAds, testFlag } from '../api/data/data';
+import { testdata, testAds, testFlag, adsValid } from '../api/data/data';
 import app from "../index";
 
 const should = chai.should();
@@ -45,7 +45,7 @@ describe('ALL AGENT strict routes', () => {
     chai.request(app)
       .post('/api/v2/property')
       .set('Authorization', `Bearer ${agentToken}`)
-      .field('Content-Type', 'multipart/form-data')
+      .set('Content-Type', 'multipart/form-data')
       .field(testAds[0])
       .attach("imageUrl","api/data/1.png") 
       .end((err, res) => {
@@ -62,7 +62,7 @@ describe('ALL AGENT strict routes', () => {
     chai.request(app)
       .post('/api/v2/property')
       .set('Authorization', `Bearer ${agentToken}`)
-      .field('Content-Type', 'multipart/form-data')
+      .set('Content-Type', 'multipart/form-data')
       .field(testAds[0])
       .attach("imageUrl","api/data/1.png") 
       .end((err, res) => {
@@ -76,7 +76,7 @@ describe('ALL AGENT strict routes', () => {
     chai.request(app)
       .patch('/api/v2/property/1')
       .set('Authorization', `Bearer ${agentToken}`)
-      .field('Content-Type', 'multipart/form-data')
+      .set('Content-Type', 'multipart/form-data')
       .field(testAds[2])
       .end((err, res) => {
         res.should.have.status(200);
@@ -97,6 +97,16 @@ describe('ALL AGENT strict routes', () => {
         res.body.should.be.a('object');
         res.body.data.should.be.a('object');
         res.body.data.should.have.property('status').eql('sold');
+        res.body.should.have.property('status').eql(200);
+        done();
+      });
+  });
+  it('GET agent property', (done) => {
+    chai.request(app)
+      .get('/api/v2/users/myAccount')
+      .set('Authorization', `Bearer ${agentToken}`)
+      .end((err, res) => {
+        res.should.have.status(200);
         res.body.should.have.property('status').eql(200);
         done();
       });
@@ -167,7 +177,7 @@ describe('/CHECK tokens and relevant middlewares', () => {
         done();
       });
   });
-  it('QUERY PARAMS validate id', (done) => {
+  it('PARAMS validate id', (done) => {
     chai.request(app)
       .get('/api/v2/property/9-')
       .set('Authorization', `Bearer ${agentToken}`)
@@ -223,17 +233,6 @@ describe('POST/flag', () => {
 });
 
 describe('/VALIDATES all input fields', () => {
-
-  it('view specific Invalid property', (done) => {
-    chai.request(app)
-      .get('/api/v2/property?type=bedrooms')
-      .set('Authorization', `Bearer ${userToken}`)
-      .end((err, res) => {
-        res.should.have.status(400);
-        res.body.should.have.property('message').eql('We only have these types singlerooms, 3bedrooms, 5bedrooms, miniFlat ,others');
-        done();
-      });
-  });
   it('view specific property Not found', (done) => {
     chai.request(app)
       .get('/api/v2/property?type=miniFlat')
@@ -255,6 +254,17 @@ describe('/VALIDATES all input fields', () => {
         done();
       });
   });
+  it('agent query available and sold property', (done) => {
+    chai.request(app)
+      .get('/api/v2/property?type=3bedrooms')
+      .set('Authorization', `Bearer ${userToken}`)
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.should.be.a('object');
+        res.body.data.should.be.a('array');
+        done();
+      });
+  });
   it('DELETE a Property', (done) => {
     chai.request(app)
       .delete('/api/v2/property/1')
@@ -269,5 +279,22 @@ describe('/VALIDATES all input fields', () => {
   });
 });
 
+describe('ALL AGENT strict routes', () => {
+  it('validate property', (done) => {
+    chai.request(app)
+      .post('/api/v2/property')
+      .set('Authorization', `Bearer ${agentToken}`)
+      .set('Content-Type', 'multipart/form-data')
+      .field(adsValid[0])
+      .attach("imageUrl","api/data/1.png") 
+      .end((err, res) => {
+        res.should.have.status(400);
+        res.body.should.be.a('object');
+        res.body.should.have.property('message').eql('We only have these types singlerooms, 3bedrooms, 5bedrooms, miniFlat ,others');
+        res.body.should.have.property('status').eql(400);
+        done();
+      });
+  });
+});
 
 

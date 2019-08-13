@@ -28,8 +28,7 @@ const property = `CREATE TABLE IF NOT EXISTS
         city VARCHAR (100)  NOT NULL,
         state VARCHAR (100)  NOT NULL,
         type VARCHAR (50)  NOT NULL,
-        ownerEmail VARCHAR (50) NOT NULL,
-        ownerPhonenumber VARCHAR (50) NOT NULL,
+        owner VARCHAR (50) NOT NULL,
         imageUrl TEXT [],
         status VARCHAR (50) DEFAULT 'available' NOT NULL
     )`;
