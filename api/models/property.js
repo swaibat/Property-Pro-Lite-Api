@@ -12,7 +12,7 @@ class Property {
   }
 
   static getPropertyByOwner(email){
-    return client.query(`SELECT * FROM property WHERE owneremail='${email}'`)
+    return client.query(`SELECT * FROM property WHERE owner='${email}'`)
   }
 
   static checkIfPropertyExist(property){

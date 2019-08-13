@@ -18,7 +18,8 @@ class authMiddleware {
       new validate({address:req}).string().required().min(2).alphaNum(),
       new validate({phoneNumber:req}).string().required().min(3).max(15).numeric()
     ]
-    if(valid[0].error)return errHandle(valid[0].status, valid[0].error, res);
+    const invalid = valid.find(e => e.error !== null)
+    if(invalid) return errHandle(invalid.status, invalid.error, res);
     next()
   }
 

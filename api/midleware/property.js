@@ -23,14 +23,15 @@ class adsMiddleware {
   }
 
   static getPropertyById(req, res, next) {
-    return User.getPropertyById(req.params.Id)
-    .then(ad => {
-      getAdWithAgent(ad).then(newAd => {
-        res.locals.property = newAd
-        if (!res.locals.property) return errHandle(404, 'property with given id not Found', res);
-        next();
-      })
-    })
+    const { id } = req.params;
+    const param = id.match(/^[0-9]+$/);
+    if (!param) return errHandle(400, 'provide a valid number in parameters', res)
+    return User.getPropertyById(id)
+    .then((e) => {
+      res.locals.property = e.rows[0]
+      if (!e.rows[0]) return errHandle(404, 'property with given id not Found', res);
+      next();
+    });
   }
 
   // find if atall that agent owners the advert he wants to do operations on
@@ -51,7 +52,7 @@ class adsMiddleware {
     if(queryLen > 0){
       return Property.queryAll(queryHandle(req.query))
       .then(ad =>{
-        getAdWithAgent(ad).then(ads => resHandle(201, 'Query successfull', ads, res))
+        getAdWithAgent(ad).then(ads => resHandle(200, 'Query successfull', ads, res))
       })
     }
     return next();
@@ -63,14 +64,20 @@ class adsMiddleware {
   }
 
   static checkIfSold(req, res, next) {
-    return Agent.markPropertySold(res.locals.property.id)
-      .then(e => e.rows[0] ? errHandle(409, 'property already marked sold', res ):next())
+    if (res.locals.property.status === 'sold') return errHandle(409, 'property already marked sold', res )
+    next()
   }
 
   static uploads(req, res, next) {
-   req.body.imageUrl = ['result.png'];
-    next() 
-}
+    const imgs = req.files.imageUrl.length ? req.files.imageUrl : [req.files.imageUrl];
+    let upload_res = imgs.map(e => e.tempFilePath).map(file => new Promise((resolve, reject) => {
+      cloudinary.v2.uploader.upload(file, (error, result) => error ? reject(error) : resolve(result.url))
+    })
+    )
+    Promise.all(upload_res)
+      .catch(error => error.code === 'ENOTFOUND' ? errHandle(400,'No internet connection to remote storage', res ) : error)
+       .then(result => {req.body.imageUrl = result; next()} )
+  }
 
 }
 

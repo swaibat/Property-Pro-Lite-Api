@@ -98,7 +98,6 @@ export const testAds = [
     state: 'central',
     address: 'kampala',
     type: '3bedrooms',
-    imageUrl: 'images/hose1.jpg'
   },
   {
     price: 200,
@@ -106,7 +105,6 @@ export const testAds = [
     state: 'western',
     address: 'kampala',
     type: '3bedrooms',
-    imageUrl: 'images/hose1.jpg',
     status: 'sold',
   },
   {
@@ -114,8 +112,7 @@ export const testAds = [
     city: 'kampala',
     state: 'central',
     address: 'kampala',
-    type: '3bedrooms',
-    imageUrl: 'images/hose1.jpg'
+    type: '3bedrooms'
   },
   {
     price: '200',
@@ -128,18 +125,14 @@ export const testAds = [
     city: false,
     state: 'central',
     address: 'kampala',
-    type: '3bedrooms',
-    imageUrl: 'images/hose1.jpg',
-    status: 'available',
+    type: '3bedrooms'
   },
   {
     price: 200,
     city: 'false',
     state: 'cent ral',
     address: 'kampala',
-    type: '3bedrooms',
-    imageUrl: 'images/hose1.jpg',
-    status: 'available',
+    type: '3bedrooms'
   },
   {
     price: 200,
@@ -155,18 +148,14 @@ export const testAds = [
     city: 'false',
     state: 'central',
     address: 'kampala',
-    type: '3bedrooms',
-    imageUrl: 'images/hose1.mp4',
-    status: 'available',
+    type: '3bedrooms'
   },
   {
     price: "200",
     city: 'false',
     state: 'central',
     address: 'kampala',
-    type: '3bedrooms',
-    imageUrl: 'images/hose1.mp4',
-    status: 'available',
+    type: '3bedrooms'
   },
 ];
 
@@ -176,3 +165,69 @@ export const testFlag = [
     description: 'kampala',
   }
 ]
+
+export const validation = [
+  {
+    firstName: '',
+    lastName: 'vella',
+    email: `vella@gmail.com`,
+    address: 'kampala',
+    phoneNumber: '07753225633',
+    password: 'vella',
+    isAgent: false,
+  },
+  {
+    firstName: 's',
+    lastName: 'vella',
+    email: `vella@gmail.com`,
+    address: 'kampala',
+    phoneNumber: '07753225633',
+    password: 'vella',
+    isAgent: false,
+  },
+  {
+    firstName: 'sonia',
+    lastName: 'vella',
+    email: `vella@gmailcom`,
+    address: 'kampala',
+    phoneNumber: '07753225633',
+    password: 'vella',
+    isAgent: false,
+  },
+  {
+    firstName: 'sonia',
+    lastName: 'vella',
+    email: `vella@gmail.com`,
+    address: 'kampala',
+    phoneNumber: '077532256337578678979',
+    password: 'vella',
+    isAgent: false,
+  },
+  {
+    firstName: 'sonia',
+    lastName: 'vella',
+    email: `vella@gmail.com`,
+    address: 'kampala',
+    phoneNumber: '07753225633v',
+    password: 'vella',
+    isAgent: false,
+  },
+  {
+    firstName: 'sonia',
+    lastName: 'vella',
+    email: `vella@gmail.com`,
+    address: 'kampala$',
+    phoneNumber: '07753225633v',
+    password: 'vella',
+    isAgent: false,
+  },
+  {
+    firstName: true,
+    lastName: 'vella',
+    email: `vella@gmail.com`,
+    address: 'kampala$',
+    phoneNumber: '07753225633v',
+    password: 'vella',
+    isAgent: false,
+  }  
+];

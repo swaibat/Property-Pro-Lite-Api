@@ -1,10 +1,10 @@
 import { User } from '../models/users';
+import 'regenerator-runtime/runtime'
 
-const ads = []
-
-async function getAdWithAgent(ad){   
+async function getAdWithAgent(ad){  
+    const ads = [] 
     for (let i = 0; i < ad.rows.length; i++ ) {
-        const a = await User.getUserByEmail(ad.rows[i].owneremail)
+        const a = await User.getUserByEmail(ad.rows[i].owner)
         const {password,isagent,...noA} = a.rows[0];
         ad.rows[i].owner = noA
         ads.push(ad.rows[i])

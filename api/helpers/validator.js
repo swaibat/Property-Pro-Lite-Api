@@ -6,7 +6,14 @@ class Validate {
     this.error = null;
     this.status = 400;
   }
-
+  string() {
+    if (typeof this.val !== 'string'){
+      this.error = `${this.key} should be a string`
+      this.val = JSON.stringify(this.val)
+      return this;
+    }
+    return this;
+  }
   required() {
     if (!this.val ){
       this.error = `${this.key} is required`
@@ -51,30 +58,6 @@ class Validate {
   numeric() {
     if (!this.val.match(/^[0-9]+$/)){
       this.error = `${this.key} should be numeric`
-      return this;
-    }
-    return this;
-  }
-
-  num() {
-    if (typeof this.val !== 'number'){
-      this.error = `${this.key} should be a number`
-      return this;
-    }
-    return this;
-  }
-
-  bool() {
-    if (this.val !== 'boolean'){
-      this.error = `${this.key} should be a boolean`
-      return this;
-    }
-    return this;
-  }
-
-  string() {
-    if (typeof this.val !== 'string'){
-      this.error = `${this.key} should be a string`
       return this;
     }
     return this;
