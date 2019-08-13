@@ -1,4 +1,3 @@
-import Property from '../models/property';
 import { Agent, User } from '../models/users';
 import resHandle from '../helpers/response';
 import { bodyHandle } from '../helpers/requests';
@@ -44,7 +43,7 @@ class PropertyController {
   }
 
   static myAccount(req,res){
-    return Property.getPropertyByOwner(req.user.email)
+    return User.getPropertyByOwner(req.user.email)
       .then(e => resHandle(200, 'my account', { details:req.user, myAds:e.rows }, res));
   }
 }

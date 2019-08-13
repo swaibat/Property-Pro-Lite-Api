@@ -1,6 +1,5 @@
-import Property from '../models/property';
 import Flag from '../models/flags';
-import { User,Agent }from '../models/users';
+import { User }from '../models/users';
 import resHandle from '../helpers/response';
 import errHandle from '../helpers/errors';
 import cloudinary from '../config/config';
@@ -37,13 +36,13 @@ class adsMiddleware {
 
   // find if atall that agent owners the advert he wants to do operations on
   static AgentAndOwner(req, res, next) {
-    Property.getPropertyByOwner(req.user.email)
+    User.getPropertyByOwner(req.user.email)
     .then(e => !e.rows[0] ? errHandle(403, 'Your do not own this property', res ):next())
   }
 
 
   static checkIfAdExist(req, res, next) {
-    Property.checkIfPropertyExist(queryHandle(req.body))
+    User.checkIfPropertyExist(queryHandle(req.body))
     .then(e => e.rows[0] ? errHandle(409, 'You can not post this propety again', res ):next())
   }
 
@@ -51,7 +50,7 @@ class adsMiddleware {
   static queryType(req, res, next) {
     const queryLen = Object.entries(req.query).length;
     if(queryLen > 0){
-      return Property.queryAll(queryHandle(req.query))
+      return User.queryAll(queryHandle(req.query))
       .then(ad =>{
         getAdWithAgent(ad).then(ads => resHandle(200, 'Query successfull', ads, res))
       })
