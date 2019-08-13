@@ -17,12 +17,12 @@ router
   .get('/users/myAccount', Auth.verifyToken, Auth.ensureUserToken, Ads.queryType, property.myAccount)
 // property routes
   .post('/property', adminRoute, Ads.validator, Ads.checkIfAdExist, Ads.uploads, property.postProperty)
-  .patch('/property/:Id', adminRoutes,Ads.AgentAndOwner, property.updateProperty)
-  .patch('/property/:Id/sold', adminRoutes, Ads.checkIfSold, Ads.AgentAndOwner, property.markSold)
-  .delete('/property/:Id', adminRoutes, Ads.AgentAndOwner, property.deleteProperty)
+  .patch('/property/:id', adminRoutes,Ads.AgentAndOwner, property.updateProperty)
+  .patch('/property/:id/sold', adminRoutes, Ads.checkIfSold, Ads.AgentAndOwner, property.markSold)
+  .delete('/property/:id', adminRoutes, Ads.AgentAndOwner, property.deleteProperty)
   .get('/property/', Auth.verifyToken, Auth.ensureUserToken, Ads.queryType, property.getAllProperty)
-  .get('/property/:Id', userRoutes, property.singleProperty)
-  .post('/flag/:Id', userRoutes, Ads.checkIfFlagged, FlagController.postFlag)
+  .get('/property/:id', userRoutes, property.singleProperty)
+  .post('/flag/:id', userRoutes, Ads.checkIfFlagged, FlagController.postFlag)
 
 
 export default router;

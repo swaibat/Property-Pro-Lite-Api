@@ -231,3 +231,13 @@ export const validation = [
     isAgent: false,
   }  
 ];
+
+export const adsValid = [
+  {
+    price: 200,
+    city: 'kampala',
+    state: 'central',
+    address: 'kampala',
+    type: 'bedrooms',
+  }
+]

@@ -18,7 +18,8 @@ class adsMiddleware {
       new validate({state:req}).string().required().min(2).alphaNum(),
       new validate({type:req}).string().required().types()
     ]
-    if(valid[0].error)return errHandle(valid[0].status, valid[0].error, res);
+    const invalid = valid.find(e => e.error !== null)
+    if(invalid) return errHandle(invalid.status, invalid.error, res);
     next()
   }
 
@@ -75,8 +76,7 @@ class adsMiddleware {
     })
     )
     Promise.all(upload_res)
-      .catch(error => error.code === 'ENOTFOUND' ? errHandle(400,'No internet connection to remote storage', res ) : error)
-       .then(result => {req.body.imageUrl = result; next()} )
+       .then(result => { req.body.imageUrl = result; next() })
   }
 
 }

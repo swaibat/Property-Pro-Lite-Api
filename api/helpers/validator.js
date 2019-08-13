@@ -73,20 +73,11 @@ class Validate {
 
   types() {
     if (!this.val.match(/^(1bedrooms|3bedrooms|5bedrooms|miniFlat|others)$/)){
-      this.error = true;
+      this.error = 'We only have these types singlerooms, 3bedrooms, 5bedrooms, miniFlat ,others';
       return this;
     }
     return this;
   }
-
-  images() {
-    if (!this.val.match(/([a-z\-_0-9\/\:\.]*\.(jpg|jpeg|png|webp|gif))/)){
-      this.error = `${this.key} is invalid`
-      return this;
-    }
-    return this;
-  }
-
 }
 
 

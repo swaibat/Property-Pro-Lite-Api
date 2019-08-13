@@ -1,6 +1,6 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
-import { testdata, testAds, testFlag } from '../api/data/data';
+import { testdata, testAds, testFlag, adsValid } from '../api/data/data';
 import app from "../index";
 
 const should = chai.should();
@@ -254,6 +254,17 @@ describe('/VALIDATES all input fields', () => {
         done();
       });
   });
+  it('agent query available and sold property', (done) => {
+    chai.request(app)
+      .get('/api/v2/property?type=3bedrooms')
+      .set('Authorization', `Bearer ${userToken}`)
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.should.be.a('object');
+        res.body.data.should.be.a('array');
+        done();
+      });
+  });
   it('DELETE a Property', (done) => {
     chai.request(app)
       .delete('/api/v2/property/1')
@@ -268,5 +279,22 @@ describe('/VALIDATES all input fields', () => {
   });
 });
 
+describe('ALL AGENT strict routes', () => {
+  it('validate property', (done) => {
+    chai.request(app)
+      .post('/api/v2/property')
+      .set('Authorization', `Bearer ${agentToken}`)
+      .set('Content-Type', 'multipart/form-data')
+      .field(adsValid[0])
+      .attach("imageUrl","api/data/1.png") 
+      .end((err, res) => {
+        res.should.have.status(400);
+        res.body.should.be.a('object');
+        res.body.should.have.property('message').eql('We only have these types singlerooms, 3bedrooms, 5bedrooms, miniFlat ,others');
+        res.body.should.have.property('status').eql(400);
+        done();
+      });
+  });
+});
 
 
