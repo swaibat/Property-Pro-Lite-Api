@@ -48,9 +48,8 @@ class adsMiddleware {
 
 
   static queryType(req, res, next) {
-    const queryLen = Object.entries(req.query).length;
-    if(queryLen > 0){
-      return User.queryAll(queryHandle(req.query))
+    if(req.query.type){
+      return User.queryTypeOfProperty(req.query.type)
       .then(ad =>{
         getAdWithAgent(ad).then(ads => resHandle(200, 'Query successfull', ads, res))
       })

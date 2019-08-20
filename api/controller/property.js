@@ -27,8 +27,8 @@ class PropertyController {
   }
 
   static getAllProperty(req, res) {
-    User.allProperty(req.user.isagent)
-      .then(ad =>{
+    User.allProperty()
+      .then(ad => {
         getAdWithAgent(ad).then(ads => resHandle(200, 'all property', ads, res))
       })
     }
@@ -37,6 +37,7 @@ class PropertyController {
     return User.getPropertyById(req.params.id)
     .then(ad => {
       getAdWithAgent(ad).then(newAd => {
+        User.addView(newAd[0].id,newAd[0].views+1)
         resHandle(200, 'one property', newAd, res)
       })
     })
