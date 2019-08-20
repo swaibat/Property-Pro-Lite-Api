@@ -26,8 +26,8 @@ router
   .patch('/property/:id', adminRoutes,Ads.AgentAndOwner, property.updateProperty)
   .patch('/property/:id/sold', adminRoutes, Ads.checkIfSold, Ads.AgentAndOwner, property.markSold)
   .delete('/property/:id', adminRoutes, Ads.AgentAndOwner, property.deleteProperty)
-  .get('/property/', Auth.verifyToken, Auth.ensureUserToken, Ads.queryType, property.getAllProperty)
-  .get('/property/:id', userRoutes, property.singleProperty)
+  .get('/property/', Ads.queryType, property.getAllProperty)
+  .get('/property/:id', property.singleProperty)
   .post('/flag/:id', userRoutes, Ads.checkIfFlagged, FlagController.postFlag)
 
 export default router;
