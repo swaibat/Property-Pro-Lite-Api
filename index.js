@@ -4,8 +4,9 @@ import cors from 'cors';
 import fileUpload from 'express-fileupload';
 import { methodError, serverError } from './api/midleware/errors';
 import apiRoutes from './api/routes/apiRoutes';
+import cookieParser from 'cookie-parser'
 
-const app = express();
+var app = express()
 
 app.use(fileUpload({
   useTempFiles: true,
@@ -13,6 +14,7 @@ app.use(fileUpload({
 }));
 
 app
+  .use(cookieParser())
   .use(cors())
   .use(bodyParser.json())
   .use(bodyParser.urlencoded({ extended: true }))

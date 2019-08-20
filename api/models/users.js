@@ -15,25 +15,21 @@ class User {
     return client.query(`SELECT * FROM property WHERE id='${id}'`)
   }
 
+  static addView(id,views){
+    return client.query(`UPDATE property SET views='${views}' WHERE id='${id}' RETURNING *`)
+  }
 
   static getUserByEmail(email) {
     return client.query(`SELECT * FROM users WHERE email='${email}'`);
   }
 
-  static queryTypeOfProperty(type, isagent) {
-    const query = isagent
-      ? 'SELECT * FROM property WHERE type=$1 '
-      : `SELECT * FROM property WHERE type=$1 and status='available' `;
-    return client.query(query, [type]);
+  static queryTypeOfProperty(type) {
+    return client.query(`SELECT * FROM property WHERE type='${type}' and status='available' `);
   }
 
 
-  static allProperty(isagent) {
-    return client.query(
-      isagent
-      ? 'SELECT * FROM property'
-      : `SELECT * FROM property WHERE status='available'`
-    );
+  static allProperty() {
+    return client.query(`SELECT * FROM property WHERE status='available'`);
   }
   
   static getPropertyByOwner(email){
@@ -44,8 +40,16 @@ class User {
     return client.query(`SELECT * FROM property WHERE ${property}`)
   }
 
-  static queryAll(query){
-      return client.query(`SELECT * FROM property WHERE ${query}`)
+  static updateAvatar(avatar, id) {
+    return client.query(`UPDATE users SET avatar='${avatar}' WHERE id='${id}' RETURNING *`);
+  }
+
+  static lastAcess(id,online) {
+    return client.query(`UPDATE users SET online='${online}', last_access ='${new Date()}' WHERE id='${id}' RETURNING *`);
+  }
+
+  static resetPassword(password,email) {
+    return client.query(`UPDATE users SET password='${password}' WHERE email='${email}' RETURNING *`);
   }
 }
 

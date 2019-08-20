@@ -16,8 +16,14 @@ const users = `CREATE TABLE IF NOT EXISTS
         address VARCHAR (150) NOT NULL,
         phoneNumber VARCHAR (50) NOT NULL,
         password VARCHAR(255) NOT NULL,
-        isAgent BOOLEAN DEFAULT false NOT NULL
+        isAgent BOOLEAN DEFAULT false NOT NULL,
+        createdOn timestamp without time zone DEFAULT now(),
+        last_access VARCHAR (150),
+        avatar VARCHAR (150),
+        online BOOLEAN DEFAULT false
        )`;
+
+       
 
 const property = `CREATE TABLE IF NOT EXISTS
     property(
@@ -30,7 +36,8 @@ const property = `CREATE TABLE IF NOT EXISTS
         type VARCHAR (50)  NOT NULL,
         owner VARCHAR (50) NOT NULL,
         imageUrl TEXT [],
-        status VARCHAR (50) DEFAULT 'available' NOT NULL
+        status VARCHAR (50) DEFAULT 'available' NOT NULL,
+        views INT DEFAULT 0
     )`;
 
     const flags = `CREATE TABLE IF NOT EXISTS
