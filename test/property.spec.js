@@ -142,18 +142,6 @@ describe('ALL AGENT strict routes', () => {
         done();
       });
   });
-  it('VIEW all Propertys agent', (done) => {
-    chai.request(app)
-      .get('/api/v2/property')
-      .set('Authorization', `Bearer ${agentToken}`)
-      .end((err, res) => {
-        res.should.have.status(200);
-        res.body.should.be.a('object');
-        res.body.data.should.be.a('array');
-        res.body.should.have.property('status').eql(200);
-        done();
-      });
-  });
 });
 describe('/CHECK tokens and relevant middlewares', () => {
   it('CHECK for ivalid token', (done) => {
@@ -240,28 +228,6 @@ describe('/VALIDATES all input fields', () => {
       .end((err, res) => {
         res.should.have.status(404);
         res.body.should.have.property('error').eql('Ooop not found');
-        done();
-      });
-  });
-  it('agent query available and sold property', (done) => {
-    chai.request(app)
-      .get('/api/v2/property?type=3bedrooms')
-      .set('Authorization', `Bearer ${agentToken}`)
-      .end((err, res) => {
-        res.should.have.status(200);
-        res.body.should.be.a('object');
-        res.body.data.should.be.a('array');
-        done();
-      });
-  });
-  it('agent query available and sold property', (done) => {
-    chai.request(app)
-      .get('/api/v2/property?type=3bedrooms')
-      .set('Authorization', `Bearer ${userToken}`)
-      .end((err, res) => {
-        res.should.have.status(200);
-        res.body.should.be.a('object');
-        res.body.data.should.be.a('array');
         done();
       });
   });

@@ -3,8 +3,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { User } from '../models/users';
 import errHandle from '../helpers/errors';
-import validate from '../helpers/validator'
-import store from 'store';
+import validate from '../helpers/validator';
 
 dotenv.config();
 
@@ -23,10 +22,10 @@ class authMiddleware {
     next()
   }
 
-  // verify user token
   static verifyToken(req, res, next) {
-    if (!req.cookies.token) return errHandle(403, 'provide a token to get our services', res);
-    req.token = req.cookies.token;
+    const bearerHeader = req.headers.authorization;
+    if (!bearerHeader) return errHandle(403, 'provide a token to get our services', res);
+    req.token = bearerHeader.split(' ')[1]
     next();
   }
 
@@ -42,7 +41,6 @@ class authMiddleware {
   // function creates user token
   static createUserToken(req, res, next) {
     req.token = jwt.sign({ email:req.body.email }, process.env.appSecreteKey, { expiresIn: '24hr' });
-    res.cookie('token', req.token)
     return next();
   }
 

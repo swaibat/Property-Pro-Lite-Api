@@ -30,7 +30,6 @@ class UserController {
   }
 
   static logOut(req, res) {
-    res.clearCookie('token')
     const online = false;
     res.status(200).send({status:200, message:'logout successful'})
     User.lastAcess(req.user.id, online)
