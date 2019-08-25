@@ -3,6 +3,7 @@ import resHandle from '../helpers/response';
 import { bodyHandle } from '../helpers/requests';
 import getAdWithAgent from '../helpers/getAgent';
 import { postHandle } from '../helpers/requests';
+import getFavs from '../helpers/favourite'
 
 class PropertyController {
   static postProperty(req, res) {
@@ -43,10 +44,31 @@ class PropertyController {
     })
   }
 
-  static myAccount(req,res){
-    return User.getPropertyByOwner(req.user.email)
-      .then(e => resHandle(200, 'my account', { details:req.user, myAds:e.rows }, res));
+  static async myAccount(req,res){
+    const myAds = await User.getPropertyByOwner(req.user.email)
+    req.user.favourite = await getFavs(req.user.favourite)
+    return resHandle(200, 'my account', { details:req.user, myAds:myAds.rows }, res)
+  }
+
+  static adToFavourite(req,res){
+    if(req.user.favourite){
+      const favExist = req.user.favourite.find(ad => ad === req.params.id)
+      if(favExist) return res.status(409).send({status:409, message:'Item already added to Favourite'})
+    }
+    req.user.favourite.push(req.params.id)
+    User.adToFavourite(req.user.id, req.user.favourite)
+    return res.status(409).send({status:409, message:'Item added to Favourite'})
+  }
+
+  static updateFavourite(req,res){
+    if(req.user.favourite){
+      const favExist = req.user.favourite.find(ad => ad === req.params.id)
+      if(!favExist) return res.status(409).send({status:409, message:'property not in your favourite'})
+    }
+    User.updateFavourite(req.user.id, req.params.id, req.user.favourite)
+    return res.status(409).send({status:409, message:'Property remove successful'})
   }
 }
+
 
 export default PropertyController;

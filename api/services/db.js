@@ -20,10 +20,9 @@ const users = `CREATE TABLE IF NOT EXISTS
         createdOn timestamp without time zone DEFAULT now(),
         last_access VARCHAR (150),
         avatar VARCHAR (150),
-        online BOOLEAN DEFAULT false
-       )`;
-
-       
+        online BOOLEAN DEFAULT false,
+        favourite TEXT []
+    )`;
 
 const property = `CREATE TABLE IF NOT EXISTS
     property(
