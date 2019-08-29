@@ -51,22 +51,16 @@ class PropertyController {
   }
 
   static adToFavourite(req,res){
-    if(req.user.favourite){
-      const favExist = req.user.favourite.find(ad => ad === req.params.id)
-      if(favExist) return res.status(409).send({status:409, message:'Item already added to Favourite'})
-    }
+    const favExist = req.user.favourite.find(ad => ad === req.params.id)
+    if(favExist) return res.status(409).send({status:409, message:'Item already added to Favourite'})
     req.user.favourite.push(req.params.id)
     User.adToFavourite(req.user.id, req.user.favourite)
-    return res.status(409).send({status:409, message:'Item added to Favourite'})
+    return res.status(409).send({status:200, message:'Item added to Favourite'})
   }
 
   static updateFavourite(req,res){
-    if(req.user.favourite){
-      const favExist = req.user.favourite.find(ad => ad === req.params.id)
-      if(!favExist) return res.status(409).send({status:409, message:'property not in your favourite'})
-    }
     User.updateFavourite(req.user.id, req.params.id, req.user.favourite)
-    return res.status(409).send({status:409, message:'Property remove successful'})
+    return res.status(409).send({status:200, message:'Property remove successful'})
   }
 }
 

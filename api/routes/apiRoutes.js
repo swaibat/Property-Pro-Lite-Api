@@ -17,9 +17,10 @@ router
   .post('/users/auth/signin', Auth.createUserToken, Auth.checkNoUser, user.signIn)
   .get('/users/myAccount', Auth.verifyToken, Auth.ensureUserToken, Ads.queryType, property.myAccount)
   .patch('/users/profile/upload', Auth.verifyToken, Auth.ensureUserToken, user.avatar)
-  .post('/users/auth/passwordreset', email.passwordreset )
-  .patch('/users/auth/resetpassword/:id/:token', email.resetPass)
+  .post('/users/auth/password_reset', email.passwordreset )
+  .patch('/users/auth/reset_password/:id/:token', email.resetPass)
   .get('/users/auth/logout',Auth.verifyToken, Auth.ensureUserToken,user.logOut)
+  .get('/users/agents',user.getAllAgents)
 
 // property routes
   .post('/property', adminRoute, Ads.validator, Ads.checkIfAdExist, Ads.uploads, property.postProperty)
@@ -29,7 +30,7 @@ router
   .get('/property', Ads.queryType, property.getAllProperty)
   .get('/property/:id', property.singleProperty)
   .get('/property/:id/favourite',userRoutes, property.adToFavourite)
-  .patch('/property/:id/favourite',userRoutes, property.updateFavourite)
+  .delete('/property/:id/favourite',userRoutes, property.updateFavourite)
   .post('/flag/:id', userRoutes, Ads.checkIfFlagged, FlagController.postFlag)
 
 export default router;

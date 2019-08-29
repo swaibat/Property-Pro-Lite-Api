@@ -59,6 +59,10 @@ class User {
   static updateFavourite(userId, favId, ads){
       return client.query(`UPDATE users SET favourite = array_remove(ARRAY[${ads}], '${favId}') WHERE id='${userId}'`);
   }
+
+  static getAllAgents() {
+    return client.query(`SELECT * FROM users WHERE isagent='true'`);
+  }
 }
 
 class Agent extends User {
