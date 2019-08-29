@@ -56,8 +56,8 @@ const property = `CREATE TABLE IF NOT EXISTS
         client.query('DROP TABLE IF EXISTS flags');
         client.query(users)
         client.query(property)
-        client.query(flags)
-    }else{
+        client.query(flags);
+}else{
         client.query(users) 
         client.query(property)
         client.query(flags)

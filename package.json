@@ -5,18 +5,14 @@
   "main": "index.js",
   "nyc": {
     "require": [
-      "esm"
-    ],
-    "exclude": [
-      "**/**/**/db.js"
+      "@babel/register"
     ]
   },
   "scripts": {
-    "start": "node -r esm index.js",
-    "dev": "nodemon -r esm index.js ",
-    "test": "NODE_ENV=test nyc mocha  --timeout 200000 --exit",
-    "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls ",
-    "kill": "taskkill /F /IM node.exe"
+    "start": "babel-node index.js",
+    "dev": "NODE_ENV=test nodemon --exec babel-node index.js",
+    "test": "NODE_ENV=test nyc mocha",
+    "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls "
   },
   "repository": {
     "type": "git",
@@ -29,12 +25,17 @@
   },
   "homepage": "https://github.com/swaibat/Property-Pro-Lite-Api#readme",
   "dependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/node": "^7.4.5",
+    "@babel/polyfill": "^7.4.4",
+    "@babel/preset-env": "^7.4.5",
+    "@babel/register": "^7.4.4",
+    "@hapi/joi": "^15.0.3",
     "bcrypt": "^3.0.6",
     "cloudinary": "^1.14.0",
     "cookie-parser": "^1.4.4",
     "cors": "^2.8.5",
     "dotenv": "^8.0.0",
-    "esm": "^3.2.25",
     "express": "^4.17.1",
     "express-fileupload": "^1.1.5",
     "jsonwebtoken": "^8.5.1",
