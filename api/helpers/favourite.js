@@ -9,7 +9,7 @@ async function getFavs(ads){
             favList.push(a.rows[0]) 
         }    
     }
-    return  await favList;
+    return  favList;
 }
 
 export default getFavs;

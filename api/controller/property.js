@@ -37,7 +37,8 @@ class PropertyController {
   static singleProperty(req, res) {
     return User.getPropertyById(req.params.id)
     .then(ad => {
-      getAdWithAgent(ad).then(newAd => {
+      getAdWithAgent(ad)
+      .then(newAd => {
         User.addView(newAd[0].id,newAd[0].views+1)
         resHandle(200, 'one property', newAd, res)
       })
@@ -45,9 +46,15 @@ class PropertyController {
   }
 
   static async myAccount(req,res){
-    const myAds = await User.getPropertyByOwner(req.user.email)
-    req.user.favourite = await getFavs(req.user.favourite)
-    return resHandle(200, 'my account', { details:req.user, myAds:myAds.rows }, res)
+    try {
+      console.log("req.user.email")
+      const myAds = await User.getPropertyByOwner(req.user.email)
+      req.user.favourite = await getFavs(req.user.favourite)
+      return resHandle(200, 'my account', { details:req.user, myAds:myAds.rows }, res)
+    } catch (error) {
+      res.send({status:400, message:error.message})
+    }
+    
   }
 
   static adToFavourite(req,res){

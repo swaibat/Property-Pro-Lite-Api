@@ -28,7 +28,7 @@ router
   .patch('/property/:id/sold', adminRoutes, Ads.checkIfSold, Ads.AgentAndOwner, property.markSold)
   .delete('/property/:id', adminRoutes, Ads.AgentAndOwner, property.deleteProperty)
   .get('/property', Ads.queryType, property.getAllProperty)
-  .get('/property/:id', property.singleProperty)
+  .get('/property/:id', Ads.getPropertyById, property.singleProperty)
   .get('/property/:id/favourite',userRoutes, property.adToFavourite)
   .delete('/property/:id/favourite',userRoutes, property.updateFavourite)
   .post('/flag/:id', userRoutes, Ads.checkIfFlagged, FlagController.postFlag)

@@ -31,10 +31,12 @@ class authMiddleware {
 
   // check if real users trying access
   static ensureUserToken(req, res, next) {
-    jwt.verify(req.token, process.env.appSecreteKey, (err, user) => {
+    jwt.verify(req.token, process.env.appSecreteKey, async (err, user) => {
       if (err) return errHandle(403, err.message.replace("jwt", "Token"), res);;
-      return User.getUserByEmail(user.email)
-        .then(u => {req.user = u.rows[0], next()});
+      const newUser = await User.getUserByEmail(user.email)
+      if(!newUser.rows[0]) return res.status(404).send({status:404, message:'user with given email not found'})
+      req.user = newUser.rows[0]
+      next()
     });
   }
 

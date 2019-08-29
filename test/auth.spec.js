@@ -10,7 +10,7 @@ chai.use(chaiHttp);
 describe('/POST/signup routes', () => {
   it('CHECK if token is provided', (done) => {
     chai.request(app)
-      .get('/api/v2/property')
+      .post('/api/v2/property')
       .end((err, res) => {
         res.should.have.status(403);
         res.body.should.be.a('object');
