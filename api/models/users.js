@@ -51,6 +51,18 @@ class User {
   static resetPassword(password,email) {
     return client.query(`UPDATE users SET password='${password}' WHERE email='${email}' RETURNING *`);
   }
+
+  static adToFavourite(userId,  ads) {
+    return client.query(`UPDATE users SET favourite = ARRAY[${ads}] WHERE id='${userId}'`);
+  }
+
+  static updateFavourite(userId, favId, ads){
+      return client.query(`UPDATE users SET favourite = array_remove(ARRAY[${ads}], '${favId}') WHERE id='${userId}'`);
+  }
+
+  static getAllAgents() {
+    return client.query(`SELECT * FROM users WHERE isagent='true'`);
+  }
 }
 
 class Agent extends User {

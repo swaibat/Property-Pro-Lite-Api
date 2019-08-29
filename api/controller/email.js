@@ -44,7 +44,7 @@ class Email{
           
           transporter.sendMail(mailOptions, function(error, info){
             if (error) return res.status(400).send({error:400, message:error.message})
-              return res.status(200).send({error:200, message:`password reset instructions have been sent to ${e.rows[0].email}`,token})
+              return res.status(200).send({status:200, message:`password reset instructions have been sent to ${e.rows[0].email}`,token})
           }); 
         })
   }

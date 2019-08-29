@@ -101,7 +101,7 @@ describe('ALL AGENT strict routes', () => {
         done();
       });
   });
-  it('GET agent property', (done) => {
+  it('GET user account details', (done) => {
     chai.request(app)
       .get('/api/v2/users/myAccount')
       .set('Authorization', `Bearer ${agentToken}`)
@@ -146,7 +146,7 @@ describe('ALL AGENT strict routes', () => {
 describe('/CHECK tokens and relevant middlewares', () => {
   it('CHECK for ivalid token', (done) => {
     chai.request(app)
-      .get('/api/v2/property')
+      .post('/api/v2/property')
       .set('Authorization', `Bearer ${agentToken}1`)
       .end((err, res) => {
         res.should.have.status(403);

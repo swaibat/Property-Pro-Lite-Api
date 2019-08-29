@@ -9,6 +9,7 @@ dotenv.config();
 
 class UserController {
   static signUp(req, res) {
+    const online = true;
     const { keys, values, token } = postHandle(req)
     new User(keys, values).createUser()
       .then(e => resHandle(201, 'signed up successfully', { isAgent:e.rows[0].isagent, token}, res))
@@ -34,6 +35,19 @@ class UserController {
     res.status(200).send({status:200, message:'logout successful'})
     User.lastAcess(req.user.id, online)
   }
+
+  static async getAllAgents(req, res){
+    let agents,allAgents=[];
+    agents = await User.getAllAgents()
+    if(!agents.rows[0]) res.status(404).send({status:404, message:'No agents found'})
+    agents.rows.forEach(agent => {
+      const { password,...noA } = agent;
+      allAgents.push(noA)
+    });
+    res.status(200).send({status:200, agents:allAgents})
+  }
+
 }
+
 
 export default UserController;

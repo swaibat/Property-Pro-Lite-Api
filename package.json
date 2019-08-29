@@ -14,7 +14,7 @@
   "scripts": {
     "start": "node -r esm index.js",
     "dev": "nodemon -r esm index.js ",
-    "test": "NODE_ENV=test nyc mocha  --timeout 100000 --exit",
+    "test": "NODE_ENV=test nyc mocha  --timeout 200000 --exit",
     "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls ",
     "kill": "taskkill /F /IM node.exe"
   },
@@ -31,6 +31,8 @@
   "dependencies": {
     "bcrypt": "^3.0.6",
     "cloudinary": "^1.14.0",
+    "cookie-parser": "^1.4.4",
+    "cors": "^2.8.5",
     "dotenv": "^8.0.0",
     "esm": "^3.2.25",
     "express": "^4.17.1",

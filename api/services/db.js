@@ -5,7 +5,7 @@ dotenv.config();
 
 const client = process.env.NODE_ENV === 'test'
   ? new Client({ connectionString: process.env.TESTDB_URL })
-  : new Client({ connectionString: process.env.DATABASE_URL });
+  : new Client({ connectionString: process.env.TESTDB_URL });
 
 const users = `CREATE TABLE IF NOT EXISTS
       users (
@@ -20,10 +20,9 @@ const users = `CREATE TABLE IF NOT EXISTS
         createdOn timestamp without time zone DEFAULT now(),
         last_access VARCHAR (150),
         avatar VARCHAR (150),
-        online BOOLEAN DEFAULT false
-       )`;
-
-       
+        online BOOLEAN DEFAULT false,
+        favourite TEXT [] DEFAULT '{}'
+    )`;
 
 const property = `CREATE TABLE IF NOT EXISTS
     property(
@@ -35,7 +34,7 @@ const property = `CREATE TABLE IF NOT EXISTS
         state VARCHAR (100)  NOT NULL,
         type VARCHAR (50)  NOT NULL,
         owner VARCHAR (50) NOT NULL,
-        imageUrl TEXT [],
+        imageUrl TEXT [] DEFAULT '{}',
         status VARCHAR (50) DEFAULT 'available' NOT NULL,
         views INT DEFAULT 0
     )`;
