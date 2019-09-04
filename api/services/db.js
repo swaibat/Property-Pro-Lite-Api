@@ -4,9 +4,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const client = process.env.NODE_ENV === 'test'
-  ? new Client({ connectionString: process.env.TESTDB_URL })
-  : new Client({ connectionString: process.env.TESTDB_URL });
-
+  ? new Client({ connectionString: process.env.TESTDB_URL})
+  : new Client({ connectionString: process.env.DATABASE_URL, ssl:true})
 const users = `CREATE TABLE IF NOT EXISTS
       users (
         id SERIAL PRIMARY KEY,
